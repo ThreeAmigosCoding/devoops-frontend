@@ -5,17 +5,13 @@ import { guestGuard } from '@core/auth/guards/guest.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/search',
+    redirectTo: '/accommodations',
     pathMatch: 'full'
   },
   {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
     canActivate: [guestGuard]
-  },
-  {
-    path: 'search',
-    loadChildren: () => import('./features/search/search.routes').then(m => m.SEARCH_ROUTES)
   },
   {
     path: 'accommodations',
@@ -43,6 +39,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/search'
+    redirectTo: '/accommodations'
   }
 ];
