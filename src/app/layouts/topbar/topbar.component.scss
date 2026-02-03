@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  padding: 0 16px;
+  gap: 8px;
+  background: var(--mat-sys-surface-container);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  margin-right: 16px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-link {
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high);
+  }
+
+  &.active {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
