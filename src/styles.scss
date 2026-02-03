@@ -6,6 +6,32 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+  font-family: var(--mat-sys-plain-font-family);
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-on-surface-variant) var(--mat-sys-surface-container);
+}
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mat-sys-surface-container);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-on-surface-variant);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--mat-sys-primary);
+  }
 }
 
 /* ─── Light Theme ─── */
@@ -81,6 +107,21 @@ html, body {
     neutral10: #1c1b1b,
     neutral-variant: #737878,
     neutral-variant20: #2c3132,
+
+    /* Shape (corner radii) */
+    corner-extra-large: 28px,
+    corner-extra-small: 4px,
+    corner-full: 9999px,
+    corner-large: 16px,
+    corner-medium: 12px,
+    corner-none: 0,
+    corner-small: 8px,
+
+    /* State layer opacities */
+    hover-state-layer-opacity: 0.08,
+    focus-state-layer-opacity: 0.12,
+    pressed-state-layer-opacity: 0.12,
+    dragged-state-layer-opacity: 0.16,
   ));
 }
 

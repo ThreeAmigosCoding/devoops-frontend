@@ -28,15 +28,12 @@ export class TopbarComponent {
   private readonly themeService = inject(ThemeService);
 
   protected readonly navItems: NavItem[] = [
-    { label: 'Search', path: '/search' },
     { label: 'Accommodations', path: '/accommodations' },
     { label: 'Create Accommodation', path: '/accommodations/create', roles: [UserRole.HOST] },
     { label: 'My Reservations', path: '/reservations', roles: [UserRole.GUEST] },
     { label: 'Ratings', path: '/ratings', roles: [UserRole.GUEST] },
     { label: 'Notifications', path: '/notifications', roles: [UserRole.GUEST, UserRole.HOST] },
-    { label: 'Profile', path: '/profile', roles: [UserRole.GUEST, UserRole.HOST] },
-    { label: 'Login', path: '/auth/login', unauthOnly: true },
-    { label: 'Register', path: '/auth/register', unauthOnly: true }
+    { label: 'Profile', path: '/profile', roles: [UserRole.GUEST, UserRole.HOST] }
   ];
 
   protected readonly user = toSignal(this.authService.currentUser$, { initialValue: null });

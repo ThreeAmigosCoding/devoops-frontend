@@ -1,0 +1,38 @@
+.login-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--mat-sys-surface-container-lowest);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.form-title {
+  color: var(--mat-sys-on-surface);
+  margin-top: 0;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.form-error {
+  color: var(--mat-sys-error);
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+.footer-link {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  a {
+    color: var(--mat-sys-primary);
+  }
+}

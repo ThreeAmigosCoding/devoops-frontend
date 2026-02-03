@@ -48,5 +48,28 @@
 
 .actions {
   display: flex;
+  align-items: center;
   gap: 4px;
+}
+
+.action-link {
+  margin: 0 4px;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-18deg); }
+  40%      { transform: rotate(18deg); }
+  60%      { transform: rotate(-12deg); }
+  80%      { transform: rotate(12deg); }
+}
+
+.theme-toggle {
+  mat-icon {
+    display: inline-block;
+  }
+
+  &:hover mat-icon {
+    animation: wiggle 400ms ease;
+  }
 }
