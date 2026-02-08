@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
@@ -17,11 +17,12 @@ import { ChangePasswordDialogComponent } from './change-password-dialog.componen
   templateUrl: './profile-dialog.component.html',
   styleUrl: './profile-dialog.component.scss'
 })
-export class ProfileDialogComponent implements OnInit {
+export class ProfileDialogComponent implements OnInit, AfterViewInit {
   private readonly dialogRef = inject(MatDialogRef<ProfileDialogComponent>);
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
   private readonly notificationService = inject(NotificationService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChild('profileForm') profileForm?: NgForm;
 
@@ -39,6 +40,10 @@ export class ProfileDialogComponent implements OnInit {
         this.notificationService.showHttpError(error, 'Failed to load profile.');
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
   }
 
   private resetEditForm(): void {
