@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
@@ -55,10 +55,11 @@ import { ChangePasswordRequest } from '@core/models/user.model';
     }
   `]
 })
-export class ChangePasswordDialogComponent {
+export class ChangePasswordDialogComponent implements AfterViewInit {
   private readonly dialogRef = inject(MatDialogRef<ChangePasswordDialogComponent>);
   private readonly userService = inject(UserService);
   private readonly notificationService = inject(NotificationService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChild('passwordForm') passwordForm?: NgForm;
 
@@ -66,6 +67,10 @@ export class ChangePasswordDialogComponent {
     currentPassword: '',
     newPassword: ''
   };
+
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
+  }
 
   onSubmit(): void {
     this.userService.changePassword(this.form).subscribe({
