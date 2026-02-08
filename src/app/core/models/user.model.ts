@@ -14,16 +14,20 @@ export interface User {
 }
 
 export interface AuthResponse {
-  token: string;
+  accessToken: string;
+  tokenType: string;
+  expiresIn: number;
   user: User;
 }
 
 export interface LoginRequest {
-  username: string;
+  usernameOrEmail: string;
   password: string;
 }
 
-export interface RegisterRequest extends LoginRequest {
+export interface RegisterRequest {
+  username: string;
+  password: string;
   email: string;
   firstName: string;
   lastName: string;

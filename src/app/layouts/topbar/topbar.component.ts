@@ -7,6 +7,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core/auth/services/auth.service';
 import { ThemeService } from '@core/services/theme.service';
 import { User, UserRole } from '@core/models/user.model';
+import {UserPayload} from '@core/auth/services/token.service';
 
 interface NavItem {
   label: string;
@@ -40,7 +41,7 @@ export class TopbarComponent {
   protected readonly isDark = this.themeService.isDark;
 
   protected isVisible(item: NavItem): boolean {
-    const currentUser: User | null = this.user();
+    const currentUser: UserPayload | null = this.user();
 
     if (item.unauthOnly) {
       return currentUser === null;

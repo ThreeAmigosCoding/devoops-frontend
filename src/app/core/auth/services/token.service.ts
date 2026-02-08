@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '@core/models/user.model';
+import {UserRole} from '@core/models/user.model';
+
+export interface UserPayload {
+  sub: string;
+  userId: string;
+  email: string;
+  role: UserRole;
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly TOKEN_KEY = 'auth_token';
+  private readonly TOKEN_KEY = 'accessToken';
 
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
@@ -25,19 +33,19 @@ export class TokenService {
     if (!token) return false;
 
     try {
-      const decoded: any = jwtDecode(token);
+      const decoded = jwtDecode<UserPayload>(token);
       return decoded.exp * 1000 > Date.now();
     } catch {
       return false;
     }
   }
 
-  getUserFromToken(): User | null {
-    const token = this.getToken();
-    if (!token) return null;
+  getUserFromToken(token?: string | null): UserPayload | null {
+    if (!token)
+      token = this.getToken();
 
     try {
-      return jwtDecode<User>(token);
+      return jwtDecode<UserPayload>(token!);
     } catch {
       return null;
     }

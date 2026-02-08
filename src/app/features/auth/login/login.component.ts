@@ -16,7 +16,7 @@ import { LoginRequest } from '@core/models/user.model';
 })
 export class LoginComponent {
   credentials: LoginRequest = {
-    username: '',
+    usernameOrEmail: '',
     password: ''
   };
   errorMessage = '';
