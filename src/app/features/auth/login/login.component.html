@@ -9,11 +9,15 @@
 
     <mat-form-field class="full-width">
       <mat-label>Password</mat-label>
-      <input matInput type="password" [(ngModel)]="credentials.password" name="password" required>
-      <mat-error>Password is required</mat-error>
+      <input matInput type="password" [(ngModel)]="credentials.password" name="password" required minlength="8" #passwordInput="ngModel">
+      <mat-error>
+        @if (passwordInput.errors?.['required']) { Password is required }
+        @if (passwordInput.errors?.['minlength']) { Password must be at least 8 characters }
+      </mat-error>
     </mat-form-field>
 
-    <button mat-flat-button color="primary" type="submit" class="submit-btn">Login</button>
+    <button mat-flat-button color="primary" type="submit" class="submit-btn"
+            [disabled]="!loginForm.valid">Login</button>
 
     @if (errorMessage) {
       <div class="form-error">{{ errorMessage }}</div>
