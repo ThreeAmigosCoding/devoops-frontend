@@ -4,14 +4,21 @@
     <div class="form-row">
       <mat-form-field class="full-width">
         <mat-label>Username</mat-label>
-        <input matInput [(ngModel)]="registerData.username" name="username" required>
-        <mat-error>Username is required</mat-error>
+        <input matInput [(ngModel)]="registerData.username" name="username" required minlength="3" maxlength="50" #usernameInput="ngModel">
+        <mat-error>
+          @if (usernameInput.errors?.['required']) { Username is required }
+          @if (usernameInput.errors?.['minlength']) { Username must be at least 3 characters }
+          @if (usernameInput.errors?.['maxlength']) { Username cannot exceed 50 characters }
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" [(ngModel)]="registerData.email" name="email" required>
-        <mat-error>Email is required</mat-error>
+        <input matInput type="email" [(ngModel)]="registerData.email" name="email" required email #emailInput="ngModel">
+        <mat-error>
+          @if (emailInput.errors?.['required']) { Email is required }
+          @if (emailInput.errors?.['email']) { Please enter a valid email address }
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -38,8 +45,11 @@
 
       <mat-form-field class="full-width">
         <mat-label>Password</mat-label>
-        <input matInput type="password" [(ngModel)]="registerData.password" name="password" required>
-        <mat-error>Password is required</mat-error>
+        <input matInput type="password" [(ngModel)]="registerData.password" name="password" required minlength="8" #passwordInput="ngModel">
+        <mat-error>
+          @if (passwordInput.errors?.['required']) { Password is required }
+          @if (passwordInput.errors?.['minlength']) { Password must be at least 8 characters }
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -52,7 +62,8 @@
       <mat-error>Please select a role</mat-error>
     </mat-form-field>
 
-    <button mat-flat-button color="primary" type="submit" class="submit-btn">Register</button>
+    <button mat-flat-button color="primary" type="submit" class="submit-btn"
+            [disabled]="!registerForm.valid">Register</button>
 
     @if (errorMessage) {
       <div class="form-error">{{ errorMessage }}</div>

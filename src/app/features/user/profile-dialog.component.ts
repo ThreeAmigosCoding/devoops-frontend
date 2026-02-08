@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -12,7 +12,7 @@ import { ChangePasswordDialogComponent } from './change-password-dialog.componen
 @Component({
   selector: 'app-profile-dialog',
   standalone: true,
-  imports: [FormsModule, MatFormField, MatLabel, MatInput, MatButton, MatIcon, MatIconButton],
+  imports: [FormsModule, MatFormField, MatLabel, MatInput, MatButton, MatIcon, MatIconButton, MatError],
   templateUrl: './profile-dialog.component.html',
   styleUrl: './profile-dialog.component.scss'
 })
@@ -20,6 +20,8 @@ export class ProfileDialogComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<ProfileDialogComponent>);
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
+
+  @ViewChild('profileForm') profileForm?: NgForm;
 
   user: User | null = null;
   isEditMode = false;
@@ -82,5 +84,9 @@ export class ProfileDialogComponent implements OnInit {
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  isFormValid(): boolean {
+    return this.profileForm?.valid ?? true;
   }
 }

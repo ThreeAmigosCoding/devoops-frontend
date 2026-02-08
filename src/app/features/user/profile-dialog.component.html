@@ -11,30 +11,44 @@
     }
 
     @if (user) {
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Username</mat-label>
-        <input matInput [(ngModel)]="editForm.username" name="username" [readonly]="!isEditMode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" [(ngModel)]="editForm.email" name="email" [readonly]="!isEditMode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>First Name</mat-label>
-        <input matInput [(ngModel)]="editForm.firstName" name="firstName" [readonly]="!isEditMode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Last Name</mat-label>
-        <input matInput [(ngModel)]="editForm.lastName" name="lastName" [readonly]="!isEditMode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Residence</mat-label>
-        <input matInput [(ngModel)]="editForm.residence" name="residence" [readonly]="!isEditMode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Role</mat-label>
-        <input matInput [value]="user.role" readonly />
-      </mat-form-field>
+      <form #profileForm="ngForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput [(ngModel)]="editForm.username" name="username" [readonly]="!isEditMode" required minlength="3" maxlength="50" #usernameInput="ngModel" />
+          <mat-error>
+            @if (usernameInput.errors?.['required']) { Username is required }
+            @if (usernameInput.errors?.['minlength']) { Username must be at least 3 characters }
+            @if (usernameInput.errors?.['maxlength']) { Username cannot exceed 50 characters }
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="editForm.email" name="email" [readonly]="!isEditMode" required email #emailInput="ngModel" />
+          <mat-error>
+            @if (emailInput.errors?.['required']) { Email is required }
+            @if (emailInput.errors?.['email']) { Please enter a valid email address }
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput [(ngModel)]="editForm.firstName" name="firstName" [readonly]="!isEditMode" required />
+          <mat-error>First name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput [(ngModel)]="editForm.lastName" name="lastName" [readonly]="!isEditMode" required />
+          <mat-error>Last name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Residence</mat-label>
+          <input matInput [(ngModel)]="editForm.residence" name="residence" [readonly]="!isEditMode" required />
+          <mat-error>Residence is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Role</mat-label>
+          <input matInput [value]="user.role" readonly />
+        </mat-form-field>
+      </form>
     }
   </div>
   <div class="devoops-dialog-actions">
@@ -50,7 +64,8 @@
     } @else {
       <span class="spacer"></span>
       <button mat-raised-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+      <button mat-flat-button color="primary" (click)="onSave()"
+              [disabled]="!isFormValid() || !isEditMode">Save</button>
     }
   </div>
 </div>

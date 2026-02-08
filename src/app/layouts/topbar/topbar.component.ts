@@ -33,10 +33,8 @@ export class TopbarComponent {
 
   protected readonly navItems: NavItem[] = [
     { label: 'Accommodations', path: '/accommodations' },
-    { label: 'Create Accommodation', path: '/accommodations/create', roles: [UserRole.HOST] },
     { label: 'My Reservations', path: '/reservations', roles: [UserRole.GUEST] },
-    { label: 'Ratings', path: '/ratings', roles: [UserRole.GUEST] },
-    { label: 'Notifications', path: '/notifications', roles: [UserRole.GUEST, UserRole.HOST] }
+    { label: 'Ratings', path: '/ratings', roles: [UserRole.GUEST] }
   ];
 
   protected readonly user = toSignal(this.authService.currentUser$, { initialValue: null });
