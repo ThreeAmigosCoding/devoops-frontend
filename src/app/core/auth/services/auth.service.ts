@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api.service';
-import { TokenService } from './token.service';
+import {UserPayload, TokenService} from './token.service';
 import {
-  User,
   UserRole,
   AuthResponse,
   LoginRequest,
@@ -15,12 +15,13 @@ import {
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject = new BehaviorSubject<UserPayload | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private api: ApiService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private router: Router
   ) {
     this.loadUserFromToken();
   }
@@ -33,19 +34,19 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('/user/login', credentials).pipe(
+    return this.api.post<AuthResponse>('/user/auth/login', credentials).pipe(
       tap(response => {
-        this.tokenService.setToken(response.token);
-        this.currentUserSubject.next(response.user);
+        this.tokenService.setToken(response.accessToken);
+        this.currentUserSubject.next(this.tokenService.getUserFromToken(response.accessToken));
       })
     );
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('/user/register', data).pipe(
+    return this.api.post<AuthResponse>('/user/auth/register', data).pipe(
       tap(response => {
-        this.tokenService.setToken(response.token);
-        this.currentUserSubject.next(response.user);
+        this.tokenService.setToken(response.accessToken);
+        this.currentUserSubject.next(this.tokenService.getUserFromToken(response.accessToken));
       })
     );
   }
@@ -53,6 +54,7 @@ export class AuthService {
   logout(): void {
     this.tokenService.removeToken();
     this.currentUserSubject.next(null);
+    void this.router.navigate(['/accommodations']);
   }
 
   isAuthenticated(): boolean {
@@ -64,7 +66,7 @@ export class AuthService {
     return user?.role === role;
   }
 
-  getCurrentUser(): User | null {
+  getCurrentUser(): UserPayload | null {
     return this.currentUserSubject.value;
   }
 }
