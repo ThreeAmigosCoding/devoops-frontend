@@ -3,13 +3,6 @@
     <h1>My Profile</h1>
   </div>
   <div class="devoops-dialog-content">
-    @if (errorMessage) {
-      <p class="message error">{{ errorMessage }}</p>
-    }
-    @if (successMessage) {
-      <p class="message success">{{ successMessage }}</p>
-    }
-
     @if (user) {
       <form #profileForm="ngForm">
         <mat-form-field appearance="outline" class="full-width">
