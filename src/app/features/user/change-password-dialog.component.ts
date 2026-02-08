@@ -5,6 +5,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { UserService } from '@core/services/user.service';
+import { NotificationService } from '@core/services/notification.service';
 import { ChangePasswordRequest } from '@core/models/user.model';
 
 @Component({
@@ -17,9 +18,6 @@ import { ChangePasswordRequest } from '@core/models/user.model';
           <h2>Change Password</h2>
         </div>
         <div class="devoops-dialog-content">
-          @if (errorMessage) {
-            <p class="error">{{ errorMessage }}</p>
-          }
           <form #passwordForm="ngForm">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Current Password</mat-label>
@@ -55,15 +53,12 @@ import { ChangePasswordRequest } from '@core/models/user.model';
     .full-width {
       width: 100%;
     }
-    .error {
-      color: var(--mat-sys-error);
-      margin: 0 0 8px;
-    }
   `]
 })
 export class ChangePasswordDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ChangePasswordDialogComponent>);
   private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NotificationService);
 
   @ViewChild('passwordForm') passwordForm?: NgForm;
 
@@ -71,14 +66,12 @@ export class ChangePasswordDialogComponent {
     currentPassword: '',
     newPassword: ''
   };
-  errorMessage = '';
 
   onSubmit(): void {
-    this.errorMessage = '';
     this.userService.changePassword(this.form).subscribe({
       next: () => this.dialogRef.close(true),
-      error: () => {
-        this.errorMessage = 'Failed to change password. Please check your current password.';
+      error: (error) => {
+        this.notificationService.showHttpError(error, 'Failed to change password. Please check your current password.');
       }
     });
   }

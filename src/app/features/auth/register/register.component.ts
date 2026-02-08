@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { AuthService } from '@core/auth/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
 import { RegisterRequest, UserRole } from '@core/models/user.model';
 
 @Component({
@@ -17,6 +18,10 @@ import { RegisterRequest, UserRole } from '@core/models/user.model';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly notificationService = inject(NotificationService);
+
   UserRole = UserRole;
 
   registerData: RegisterRequest = {
@@ -28,21 +33,15 @@ export class RegisterComponent {
     password: '',
     role: UserRole.GUEST
   };
-  errorMessage = '';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
 
   onSubmit(): void {
-    this.errorMessage = '';
     this.authService.register(this.registerData).subscribe({
       next: () => {
+        this.notificationService.showSuccess('Registration successful! Welcome aboard.');
         void this.router.navigate(['/accommodations']);
       },
       error: (error) => {
-        this.errorMessage = 'Registration failed. Please try again.';
+        this.notificationService.showHttpError(error, 'Registration failed. Please try again.');
         console.error('Registration error:', error);
       }
     });

@@ -18,10 +18,6 @@
 
     <button mat-flat-button color="primary" type="submit" class="submit-btn"
             [disabled]="!loginForm.valid">Login</button>
-
-    @if (errorMessage) {
-      <div class="form-error">{{ errorMessage }}</div>
-    }
   </form>
 
   <p class="footer-link">

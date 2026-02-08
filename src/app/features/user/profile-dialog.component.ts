@@ -6,6 +6,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { UserService } from '@core/services/user.service';
+import { NotificationService } from '@core/services/notification.service';
 import { User, AuthResponse, UpdateProfileRequest } from '@core/models/user.model';
 import { ChangePasswordDialogComponent } from './change-password-dialog.component';
 
@@ -20,14 +21,13 @@ export class ProfileDialogComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<ProfileDialogComponent>);
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
 
   @ViewChild('profileForm') profileForm?: NgForm;
 
   user: User | null = null;
   isEditMode = false;
   editForm: UpdateProfileRequest = {};
-  errorMessage = '';
-  successMessage = '';
 
   ngOnInit(): void {
     this.userService.getProfile().subscribe({
@@ -35,8 +35,8 @@ export class ProfileDialogComponent implements OnInit {
         this.user = user;
         this.resetEditForm();
       },
-      error: () => {
-        this.errorMessage = 'Failed to load profile.';
+      error: (error) => {
+        this.notificationService.showHttpError(error, 'Failed to load profile.');
       }
     });
   }
@@ -54,32 +54,33 @@ export class ProfileDialogComponent implements OnInit {
 
   onEdit(): void {
     this.isEditMode = true;
-    this.errorMessage = '';
-    this.successMessage = '';
   }
 
   onCancel(): void {
     this.isEditMode = false;
     this.resetEditForm();
-    this.errorMessage = '';
   }
 
   onSave(): void {
-    this.errorMessage = '';
     this.userService.updateProfile(this.editForm).subscribe({
       next: (response: AuthResponse) => {
         this.user = response.user;
         this.isEditMode = false;
-        this.successMessage = 'Profile updated successfully.';
+        this.notificationService.showSuccess('Profile updated successfully.');
       },
-      error: () => {
-        this.errorMessage = 'Failed to update profile.';
+      error: (error) => {
+        this.notificationService.showHttpError(error, 'Failed to update profile.');
       }
     });
   }
 
   onChangePassword(): void {
-    this.dialog.open(ChangePasswordDialogComponent);
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.notificationService.showSuccess('Password changed successfully.');
+      }
+    });
   }
 
   onClose(): void {

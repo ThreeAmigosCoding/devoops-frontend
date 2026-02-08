@@ -99,7 +99,7 @@ h1, h2, h3, h4, h5, h6 {
     outline-variant: #78CDD7,
 
     /* Error – standard red tones from generated theme */
-    error: #ba1a1a,
+    error: #C3423F,
     error-container: #ffdad6,
     on-error: #ffffff,
     on-error-container: #410002,
@@ -270,4 +270,23 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+}
+
+/* ─── Snackbar Styles ─── */
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background-color: var(--mat-sys-error) !important;
+  }
+  .mdc-snackbar__label, .mat-mdc-snack-bar-action {
+    color: var(--mat-sys-on-error) !important;
+  }
+}
+
+.snackbar-success {
+  .mdc-snackbar__surface {
+    background-color: var(--mat-sys-primary) !important;
+  }
+  .mdc-snackbar__label, .mat-mdc-snack-bar-action {
+    color: var(--mat-sys-on-primary) !important;
+  }
 }
