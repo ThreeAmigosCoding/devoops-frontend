@@ -33,11 +33,6 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES),
-    canActivate: [authGuard]
-  },
-  {
     path: '**',
     redirectTo: '/accommodations'
   }

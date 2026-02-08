@@ -33,21 +33,20 @@ export class AuthService {
     }
   }
 
+  handleAuthResponse(response: AuthResponse): void {
+    this.tokenService.setToken(response.accessToken);
+    this.currentUserSubject.next(this.tokenService.getUserFromToken(response.accessToken));
+  }
+
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.api.post<AuthResponse>('/user/auth/login', credentials).pipe(
-      tap(response => {
-        this.tokenService.setToken(response.accessToken);
-        this.currentUserSubject.next(this.tokenService.getUserFromToken(response.accessToken));
-      })
+      tap(response => this.handleAuthResponse(response))
     );
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.api.post<AuthResponse>('/user/auth/register', data).pipe(
-      tap(response => {
-        this.tokenService.setToken(response.accessToken);
-        this.currentUserSubject.next(this.tokenService.getUserFromToken(response.accessToken));
-      })
+      tap(response => this.handleAuthResponse(response))
     );
   }
 

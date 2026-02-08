@@ -1,0 +1,31 @@
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 360px;
+  padding: 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.message {
+  margin: 0 0 4px;
+  padding: 8px;
+  border-radius: 4px;
+
+  &.error {
+    color: var(--mat-sys-error);
+    background-color: var(--mat-sys-error-container, #fde8e8);
+  }
+
+  &.success {
+    color: var(--mat-sys-primary);
+    background-color: var(--mat-sys-primary-container, #e8f5e9);
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
