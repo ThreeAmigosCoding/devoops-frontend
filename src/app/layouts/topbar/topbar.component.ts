@@ -3,11 +3,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core/auth/services/auth.service';
 import { ThemeService } from '@core/services/theme.service';
-import { User, UserRole } from '@core/models/user.model';
-import {UserPayload} from '@core/auth/services/token.service';
+import { UserRole } from '@core/models/user.model';
+import { UserPayload } from '@core/auth/services/token.service';
+import { ProfileDialogComponent } from '@features/user/profile-dialog.component';
 
 interface NavItem {
   label: string;
@@ -27,14 +29,14 @@ interface NavItem {
 export class TopbarComponent {
   private readonly authService = inject(AuthService);
   private readonly themeService = inject(ThemeService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly navItems: NavItem[] = [
     { label: 'Accommodations', path: '/accommodations' },
     { label: 'Create Accommodation', path: '/accommodations/create', roles: [UserRole.HOST] },
     { label: 'My Reservations', path: '/reservations', roles: [UserRole.GUEST] },
     { label: 'Ratings', path: '/ratings', roles: [UserRole.GUEST] },
-    { label: 'Notifications', path: '/notifications', roles: [UserRole.GUEST, UserRole.HOST] },
-    { label: 'Profile', path: '/profile', roles: [UserRole.GUEST, UserRole.HOST] }
+    { label: 'Notifications', path: '/notifications', roles: [UserRole.GUEST, UserRole.HOST] }
   ];
 
   protected readonly user = toSignal(this.authService.currentUser$, { initialValue: null });
@@ -60,6 +62,10 @@ export class TopbarComponent {
 
   onToggleTheme(): void {
     this.themeService.toggle();
+  }
+
+  openProfile(): void {
+    this.dialog.open(ProfileDialogComponent, { minWidth: '600px' });
   }
 
   onLogout(): void {

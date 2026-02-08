@@ -1,0 +1,57 @@
+<div class="devoops-dialog">
+  <div class="devoops-dialog-title-container">
+    <h1>My Profile</h1>
+  </div>
+  <div class="devoops-dialog-content">
+    @if (errorMessage) {
+      <p class="message error">{{ errorMessage }}</p>
+    }
+    @if (successMessage) {
+      <p class="message success">{{ successMessage }}</p>
+    }
+
+    @if (user) {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="editForm.username" name="username" [readonly]="!isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="editForm.email" name="email" [readonly]="!isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>First Name</mat-label>
+        <input matInput [(ngModel)]="editForm.firstName" name="firstName" [readonly]="!isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput [(ngModel)]="editForm.lastName" name="lastName" [readonly]="!isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Residence</mat-label>
+        <input matInput [(ngModel)]="editForm.residence" name="residence" [readonly]="!isEditMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Role</mat-label>
+        <input matInput [value]="user.role" readonly />
+      </mat-form-field>
+    }
+  </div>
+  <div class="devoops-dialog-actions">
+    @if (!isEditMode) {
+      <button mat-icon-button (click)="onChangePassword()" aria-label="Change Password">
+        <mat-icon>key</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="onEdit()" aria-label="Edit">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-flat-button (click)="onClose()">Close</button>
+    } @else {
+      <span class="spacer"></span>
+      <button mat-raised-button (click)="onCancel()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+    }
+  </div>
+</div>
+

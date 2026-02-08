@@ -34,3 +34,16 @@ export interface RegisterRequest {
   residence: string;
   role: UserRole;
 }
+
+export interface UpdateProfileRequest {
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  residence?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}

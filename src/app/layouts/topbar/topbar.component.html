@@ -19,6 +19,12 @@
       <a routerLink="/auth/register" routerLinkActive="active" class="nav-link action-link">Register</a>
     }
 
+    @if (user() !== null) {
+      <button mat-icon-button (click)="openProfile()" aria-label="Profile">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    }
+
     <button mat-icon-button class="theme-toggle" (click)="onToggleTheme()"
             [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
       <mat-icon>{{ isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
