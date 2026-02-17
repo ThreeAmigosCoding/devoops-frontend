@@ -6,6 +6,51 @@ mat-dialog-content {
   padding: 0;
 }
 
+.devoops-dialog-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline, #79747e) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--mat-sys-outline, #79747e);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--mat-sys-on-surface-variant, #49454f);
+  }
+}
+
+.content-layout {
+  display: flex;
+  gap: 24px;
+}
+
+.profile-form {
+  flex: 1;
+  min-width: 0;
+}
+
+.preferences-divider {
+  align-self: stretch;
+}
+
+.preferences-panel {
+  flex: 1;
+  min-width: 0;
+}
+
 .full-width {
   width: 100%;
 }

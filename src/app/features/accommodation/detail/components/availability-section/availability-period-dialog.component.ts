@@ -88,7 +88,7 @@ export interface AvailabilityDialogResult {
     }
 
     .form-error {
-      color: #f44336;
+      color: var(--mat-sys-error, #f44336);
       font-size: 0.75rem;
       margin-top: -0.5rem;
       margin-bottom: 0.5rem;
