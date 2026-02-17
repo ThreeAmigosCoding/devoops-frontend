@@ -1,0 +1,73 @@
+.availability-section {
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.periods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.period-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.period-dates {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+
+  .date {
+    font-weight: 500;
+  }
+
+  .separator {
+    color: #999;
+  }
+}
+
+.period-price {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.period-actions {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+
+  @media (max-width: 599px) {
+    margin-left: 0;
+  }
+}
+
+.no-periods {
+  color: #999;
+  font-style: italic;
+  padding: 1rem 0;
+}

@@ -46,6 +46,26 @@ export interface AccommodationPhotoResponse {
   updatedAt: string;
 }
 
+export interface AvailabilityPeriodResponse {
+  id: string;
+  accommodationId: string;
+  startDate: string;
+  endDate: string;
+  pricePerDay: number;
+}
+
+export interface CreateAvailabilityPeriodRequest {
+  startDate: string;
+  endDate: string;
+  pricePerDay: number;
+}
+
+export interface UpdateAvailabilityPeriodRequest {
+  startDate?: string;
+  endDate?: string;
+  pricePerDay?: number;
+}
+
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;

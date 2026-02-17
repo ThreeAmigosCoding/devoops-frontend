@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AccommodationResponse, AmenityType } from '@core/models/accommodation.model';
 import { AccommodationService } from '@core/services/accommodation.service';
+import { AMENITY_ICONS } from '@shared/constants/amenity-icons';
 
 @Component({
   selector: 'app-accommodation-card',
@@ -32,18 +33,7 @@ export class AccommodationCardComponent implements OnInit {
   imageLoading = signal(true);
   imageError = signal(false);
 
-  readonly amenityIcons: Record<AmenityType, { icon: string; label: string }> = {
-    [AmenityType.WIFI]: { icon: 'wifi', label: 'WiFi' },
-    [AmenityType.KITCHEN]: { icon: 'kitchen', label: 'Kitchen' },
-    [AmenityType.AC]: { icon: 'ac_unit', label: 'Air Conditioning' },
-    [AmenityType.PARKING]: { icon: 'local_parking', label: 'Parking' },
-    [AmenityType.FREE_PARKING]: { icon: 'local_parking', label: 'Free Parking' },
-    [AmenityType.POOL]: { icon: 'pool', label: 'Pool' },
-    [AmenityType.TV]: { icon: 'tv', label: 'TV' },
-    [AmenityType.WASHING_MACHINE]: { icon: 'local_laundry_service', label: 'Washing Machine' },
-    [AmenityType.HEATING]: { icon: 'thermostat', label: 'Heating' },
-    [AmenityType.BALCONY]: { icon: 'balcony', label: 'Balcony' }
-  };
+  readonly amenityIcons = AMENITY_ICONS;
 
   ngOnInit(): void {
     this.loadPrimaryPhoto();

@@ -1,0 +1,40 @@
+<div class="availability-section">
+  <div class="section-header">
+    <h3>Availability</h3>
+    @if (isOwner) {
+      <button mat-flat-button color="primary" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        Add Period
+      </button>
+    }
+  </div>
+
+  @if (sortedPeriods.length > 0) {
+    <div class="periods-list">
+      @for (period of sortedPeriods; track period.id) {
+        <div class="period-card">
+          <div class="period-dates">
+            <span class="date">{{ period.startDate | date:'MMM d, yyyy' }}</span>
+            <span class="separator">—</span>
+            <span class="date">{{ period.endDate | date:'MMM d, yyyy' }}</span>
+          </div>
+          <div class="period-price">
+            {{ period.pricePerDay | currency:'USD' }} {{ pricingLabel }}
+          </div>
+          @if (isOwner) {
+            <div class="period-actions">
+              <button mat-icon-button (click)="openEditDialog(period)" aria-label="Edit period">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="confirmDelete(period.id)" aria-label="Delete period">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="no-periods">No availability periods defined</p>
+  }
+</div>
