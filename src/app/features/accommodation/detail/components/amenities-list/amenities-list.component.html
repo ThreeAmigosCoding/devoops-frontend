@@ -1,0 +1,14 @@
+<div class="amenities-list">
+  <h3>Amenities</h3>
+  <div class="amenities-grid">
+    @for (amenity of amenities; track amenity) {
+      <div class="amenity-item">
+        <mat-icon>{{ amenityIcons[amenity].icon }}</mat-icon>
+        <span>{{ amenityIcons[amenity].label }}</span>
+      </div>
+    }
+  </div>
+  @if (!amenities || amenities.length === 0) {
+    <p class="no-amenities">No amenities listed</p>
+  }
+</div>

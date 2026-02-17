@@ -1,0 +1,70 @@
+@if (photos.length > 0) {
+  <!-- Desktop layout -->
+  <div class="gallery-desktop">
+    <div class="main-image-container">
+      @if (mainPhoto) {
+        <img
+          [src]="getPhotoUrl(mainPhoto)"
+          [alt]="mainPhoto.originalFilename"
+          class="main-image"
+          (load)="onImageLoad(mainPhoto.id)"
+          (error)="onImageError(mainPhoto.id)"
+        />
+      }
+    </div>
+
+    @if (photos.length > 1) {
+      <div class="thumbnail-grid">
+        @for (photo of thumbnailPhotos; track photo.id; let i = $index) {
+          @if (i !== selectedIndex()) {
+            <div
+              class="thumbnail-container"
+              [class.active]="i === selectedIndex()"
+              (click)="selectPhoto(i)"
+            >
+              <img
+                [src]="getPhotoUrl(photo)"
+                [alt]="photo.originalFilename"
+                class="thumbnail"
+                (load)="onImageLoad(photo.id)"
+                (error)="onImageError(photo.id)"
+              />
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Mobile layout -->
+  <div class="gallery-mobile">
+    <div class="scroll-container">
+      @for (photo of photos; track photo.id; let i = $index) {
+        <div class="scroll-item">
+          <img
+            [src]="getPhotoUrl(photo)"
+            [alt]="photo.originalFilename"
+            (load)="onImageLoad(photo.id)"
+            (error)="onImageError(photo.id)"
+          />
+        </div>
+      }
+    </div>
+    @if (photos.length > 1) {
+      <div class="dot-indicators">
+        @for (photo of photos; track photo.id; let i = $index) {
+          <span
+            class="dot"
+            [class.active]="i === selectedIndex()"
+            (click)="selectPhoto(i)"
+          ></span>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <div class="no-photos">
+    <mat-icon>image</mat-icon>
+    <p>No photos available</p>
+  </div>
+}

@@ -1,0 +1,101 @@
+@if (loading()) {
+  <div class="loading-container">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+} @else if (error()) {
+  <div class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+    <button mat-flat-button color="primary" (click)="goBack()">Back to Accommodations</button>
+  </div>
+} @else if (accommodation()) {
+  <div class="detail-page">
+    <!-- Header -->
+    <div class="detail-header">
+      <button mat-icon-button (click)="goBack()" aria-label="Go back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>{{ accommodation()!.name }}</h1>
+    </div>
+
+    <!-- Photo Gallery -->
+    <app-photo-gallery
+      [photos]="photos()"
+      [accommodationId]="accommodation()!.id"
+      [accommodationService]="accommodationService"
+    ></app-photo-gallery>
+
+    <!-- Content area -->
+    <div class="detail-content">
+      <!-- Main details -->
+      <div class="detail-main">
+        <!-- Quick info -->
+        <div class="quick-info">
+          <div class="info-item">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ accommodation()!.address }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>group</mat-icon>
+            <span>{{ guestCapacity() }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>payments</mat-icon>
+            <span>{{ pricingModeLabel() }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>{{ accommodation()!.approvalMode === 'AUTOMATIC' ? 'check_circle' : 'pending' }}</mat-icon>
+            <span>{{ approvalModeLabel() }}</span>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Amenities -->
+        <app-amenities-list [amenities]="accommodation()!.amenities"></app-amenities-list>
+
+        <mat-divider></mat-divider>
+
+        <!-- Availability -->
+        <app-availability-section
+          [periods]="availability()"
+          [isOwner]="isOwner()"
+          [pricingMode]="accommodation()!.pricingMode"
+          (addPeriod)="onAddPeriod($event)"
+          (editPeriod)="onEditPeriod($event)"
+          (deletePeriod)="onDeletePeriod($event)"
+        ></app-availability-section>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="detail-sidebar">
+        <div class="sidebar-card">
+          @if (isOwner()) {
+            <div class="owner-badge">
+              <mat-icon>home</mat-icon>
+              <span>Your listing</span>
+            </div>
+          } @else {
+            @if (availability().length > 0) {
+              <div class="price-display">
+                <span class="price-label">From</span>
+                <span class="price-amount">
+                  {{ availability()[0].pricePerDay | currency:'USD' }}
+                </span>
+                <span class="price-suffix">/ night</span>
+              </div>
+            }
+            @if (isGuest()) {
+              <button mat-flat-button color="primary" class="reserve-button" disabled>
+                Reserve
+              </button>
+              <p class="reserve-hint">Reservations coming soon</p>
+            } @else if (!isAuthenticated()) {
+              <p class="login-hint">Log in to make a reservation</p>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
