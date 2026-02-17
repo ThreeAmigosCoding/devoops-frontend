@@ -1,0 +1,56 @@
+<mat-card class="accommodation-card" (click)="navigateToDetail()" (keydown.enter)="navigateToDetail()" tabindex="0">
+  <div class="card-image-container">
+    @if (imageLoading()) {
+      <div class="image-placeholder">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    }
+
+    @if (photoUrl() && !imageError()) {
+      <img
+        [src]="photoUrl()"
+        [alt]="accommodation.name"
+        class="card-image"
+        [class.loading]="imageLoading()"
+        (load)="onImageLoad()"
+        (error)="onImageError()"
+      />
+    }
+
+    @if (imageError() || (!photoUrl() && !imageLoading())) {
+      <div class="image-placeholder no-image">
+        <mat-icon>home</mat-icon>
+        <span>No photo</span>
+      </div>
+    }
+  </div>
+
+  <mat-card-content class="card-content">
+    <h3 class="accommodation-name">{{ accommodation.name }}</h3>
+
+    <div class="accommodation-location">
+      <mat-icon>location_on</mat-icon>
+      <span>{{ accommodation.address }}</span>
+    </div>
+
+    <div class="accommodation-capacity">
+      <mat-icon>people</mat-icon>
+      <span>{{ guestCapacity }}</span>
+    </div>
+
+    @if (displayedAmenities.length > 0) {
+      <div class="amenities-row">
+        @for (amenity of displayedAmenities; track amenity) {
+          <mat-icon
+            class="amenity-icon"
+            [matTooltip]="amenityIcons[amenity].label">
+            {{ amenityIcons[amenity].icon }}
+          </mat-icon>
+        }
+        @if (remainingAmenitiesCount > 0) {
+          <span class="more-amenities">+{{ remainingAmenitiesCount }}</span>
+        }
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

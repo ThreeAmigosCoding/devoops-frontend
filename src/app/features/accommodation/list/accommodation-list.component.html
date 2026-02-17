@@ -1,0 +1,67 @@
+<div class="accommodation-list-container">
+  <header class="list-header">
+    <h1>Explore Accommodations</h1>
+    @if (isHost) {
+      <a mat-flat-button color="primary" routerLink="create">
+        <mat-icon>add</mat-icon>
+        Create Listing
+      </a>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading accommodations...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" (click)="retry()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+  }
+
+  @if (!loading() && !error() && accommodations().length === 0) {
+    <div class="empty-container">
+      <mat-icon>home_work</mat-icon>
+      <h2>No accommodations yet</h2>
+      <p>Be the first to create a listing!</p>
+      @if (isHost) {
+        <a mat-flat-button color="primary" routerLink="create">
+          <mat-icon>add</mat-icon>
+          Create Listing
+        </a>
+      }
+    </div>
+  }
+
+  @if (!loading() && !error() && accommodations().length > 0) {
+    <div class="accommodation-grid">
+      @for (accommodation of accommodations(); track accommodation.id) {
+        <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="load-more-container">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="loadMore()"
+          [disabled]="loadingMore()">
+          @if (loadingMore()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Load More
+          }
+        </button>
+      </div>
+    }
+  }
+</div>
