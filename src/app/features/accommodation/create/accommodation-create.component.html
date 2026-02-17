@@ -1,0 +1,105 @@
+<div class="devoops-dialog">
+  <div class="devoops-dialog-title-container">
+    <h1>Create Accommodation</h1>
+  </div>
+  <div class="devoops-dialog-content">
+    <form #createForm="ngForm" class="create-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="formData.name" name="name" required minlength="3" maxlength="100" #nameInput="ngModel">
+        <mat-error>
+          @if (nameInput.errors?.['required']) { Name is required }
+          @if (nameInput.errors?.['minlength']) { Name must be at least 3 characters }
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Address</mat-label>
+        <input matInput [(ngModel)]="formData.address" name="address" required #addressInput="ngModel">
+        <mat-error>Address is required</mat-error>
+      </mat-form-field>
+
+      <h3 class="section-label">Guest Capacity</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Min Guests</mat-label>
+          <input matInput type="number" [(ngModel)]="formData.minGuests" name="minGuests" required min="1" #minGuestsInput="ngModel">
+          <mat-error>Min guests must be at least 1</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Max Guests</mat-label>
+          <input matInput type="number" [(ngModel)]="formData.maxGuests" name="maxGuests" required min="1" #maxGuestsInput="ngModel">
+          <mat-error>Max guests must be at least 1</mat-error>
+        </mat-form-field>
+      </div>
+      @if (guestsInvalid) {
+        <p class="form-error">Minimum guests cannot exceed maximum guests.</p>
+      }
+
+      <h3 class="section-label">Settings</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Pricing Mode</mat-label>
+          <mat-select [(ngModel)]="formData.pricingMode" name="pricingMode" required>
+            <mat-option [value]="PricingMode.PER_UNIT">Per Unit</mat-option>
+            <mat-option [value]="PricingMode.PER_GUEST">Per Guest</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Approval Mode</mat-label>
+          <mat-select [(ngModel)]="formData.approvalMode" name="approvalMode" required>
+            <mat-option [value]="ApprovalMode.MANUAL">Manual</mat-option>
+            <mat-option [value]="ApprovalMode.AUTOMATIC">Automatic</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <h3 class="section-label">Amenities</h3>
+      <div class="amenities-grid">
+        @for (amenity of amenityTypes; track amenity) {
+          <mat-checkbox [checked]="hasAmenity(amenity)" (change)="toggleAmenity(amenity)">
+            <mat-icon>{{ AMENITY_ICONS[amenity].icon }}</mat-icon>
+            {{ AMENITY_ICONS[amenity].label }}
+          </mat-checkbox>
+        }
+      </div>
+
+      <h3 class="section-label">Photos</h3>
+      <div class="photo-section">
+        <input type="file" #fileInput hidden multiple accept="image/*" (change)="onFilesSelected($event)">
+        <button mat-stroked-button type="button" (click)="fileInput.click()">
+          <mat-icon>add_photo_alternate</mat-icon>
+          Add Photos
+        </button>
+        @if (selectedFiles.length > 0) {
+          <span class="file-count">{{ selectedFiles.length }} file(s) selected</span>
+        }
+        @if (previewUrls.length > 0) {
+          <div class="photo-previews">
+            @for (url of previewUrls; track url; let i = $index) {
+              <div class="preview-item">
+                <img [src]="url" [alt]="selectedFiles[i].name">
+                <button mat-icon-button class="remove-btn" type="button" (click)="removeFile(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </form>
+  </div>
+  <div class="devoops-dialog-actions">
+    <button mat-raised-button (click)="onCancel()" [disabled]="submitting">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()"
+            [disabled]="!createForm.valid || guestsInvalid || submitting">
+      @if (submitting) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        Create
+      }
+    </button>
+  </div>
+</div>

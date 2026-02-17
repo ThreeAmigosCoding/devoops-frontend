@@ -86,10 +86,9 @@
               </div>
             }
             @if (isGuest()) {
-              <button mat-flat-button color="primary" class="reserve-button" disabled>
+              <button mat-flat-button color="primary" class="reserve-button" (click)="onReserve()">
                 Reserve
               </button>
-              <p class="reserve-hint">Reservations coming soon</p>
             } @else if (!isAuthenticated()) {
               <p class="login-hint">Log in to make a reservation</p>
             }

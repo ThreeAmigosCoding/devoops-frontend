@@ -1,21 +1,21 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { AccommodationCardComponent } from '@shared/components/accommodation-card/accommodation-card.component';
 import { AccommodationService } from '@core/services/accommodation.service';
 import { AuthService } from '@core/auth/services/auth.service';
 import { AccommodationResponse } from '@core/models/accommodation.model';
 import { UserRole } from '@core/models/user.model';
+import { AccommodationCreateComponent } from '../create/accommodation-create.component';
 
 @Component({
   selector: 'app-accommodation-list',
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
@@ -27,6 +27,7 @@ import { UserRole } from '@core/models/user.model';
 export class AccommodationListComponent implements OnInit {
   private readonly accommodationService = inject(AccommodationService);
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
 
   accommodations = signal<AccommodationResponse[]>([]);
   loading = signal(true);
@@ -87,5 +88,18 @@ export class AccommodationListComponent implements OnInit {
 
   retry(): void {
     this.loadAccommodations();
+  }
+
+  openCreateDialog(): void {
+    const dialogRef = this.dialog.open(AccommodationCreateComponent, {
+      width: '700px',
+      maxHeight: '90vh'
+    });
+
+    dialogRef.afterClosed().subscribe((result: AccommodationResponse | undefined) => {
+      if (result) {
+        this.accommodations.update(current => [result, ...current]);
+      }
+    });
   }
 }

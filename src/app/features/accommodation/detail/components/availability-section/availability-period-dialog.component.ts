@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -35,28 +35,17 @@ export interface AvailabilityDialogResult {
     <mat-dialog-content>
       <form [formGroup]="form" class="dialog-form">
         <mat-form-field appearance="outline">
-          <mat-label>Start Date</mat-label>
-          <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
-          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-          <mat-datepicker #startPicker></mat-datepicker>
-          @if (form.controls['startDate'].hasError('required')) {
-            <mat-error>Start date is required</mat-error>
+          <mat-label>Date Range</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [min]="minDate">
+            <input matStartDate formControlName="startDate" placeholder="Start date" />
+            <input matEndDate formControlName="endDate" placeholder="End date" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          @if (form.controls['startDate'].hasError('required') || form.controls['endDate'].hasError('required')) {
+            <mat-error>Both dates are required</mat-error>
           }
         </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>End Date</mat-label>
-          <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
-          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-          <mat-datepicker #endPicker></mat-datepicker>
-          @if (form.controls['endDate'].hasError('required')) {
-            <mat-error>End date is required</mat-error>
-          }
-        </mat-form-field>
-
-        @if (form.hasError('dateRange')) {
-          <p class="form-error">End date must be after start date</p>
-        }
 
         <mat-form-field appearance="outline">
           <mat-label>Price per Night</mat-label>
@@ -87,16 +76,11 @@ export interface AvailabilityDialogResult {
       padding-top: 0.5rem;
     }
 
-    .form-error {
-      color: var(--mat-sys-error, #f44336);
-      font-size: 0.75rem;
-      margin-top: -0.5rem;
-      margin-bottom: 0.5rem;
-    }
-  `]
+`]
 })
 export class AvailabilityPeriodDialogComponent {
   form: FormGroup;
+  minDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -108,16 +92,7 @@ export class AvailabilityPeriodDialogComponent {
       startDate: [period ? new Date(period.startDate) : null, Validators.required],
       endDate: [period ? new Date(period.endDate) : null, Validators.required],
       pricePerDay: [period?.pricePerDay ?? null, [Validators.required, Validators.min(0.01)]]
-    }, { validators: this.dateRangeValidator });
-  }
-
-  private dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-    const start = control.get('startDate')?.value;
-    const end = control.get('endDate')?.value;
-    if (start && end && new Date(start) >= new Date(end)) {
-      return { dateRange: true };
-    }
-    return null;
+    });
   }
 
   submit(): void {

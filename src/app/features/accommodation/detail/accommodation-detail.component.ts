@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AccommodationService } from '@core/services/accommodation.service';
 import { AuthService } from '@core/auth/services/auth.service';
@@ -24,6 +25,8 @@ import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.
 import { AmenitiesListComponent } from './components/amenities-list/amenities-list.component';
 import { AvailabilitySectionComponent } from './components/availability-section/availability-section.component';
 import { AvailabilityDialogResult } from './components/availability-section/availability-period-dialog.component';
+import { ReservationDialogComponent, ReservationDialogData } from './components/reservation-dialog.component';
+import { ReservationResponse } from '@core/models/reservation.model';
 
 @Component({
   selector: 'app-accommodation-detail',
@@ -50,6 +53,7 @@ export class AccommodationDetailComponent implements OnInit {
   readonly accommodationService = inject(AccommodationService);
   private readonly authService = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
+  private readonly dialog = inject(MatDialog);
 
   accommodation = signal<AccommodationResponse | null>(null);
   photos = signal<AccommodationPhotoResponse[]>([]);
@@ -161,6 +165,28 @@ export class AccommodationDetailComponent implements OnInit {
         this.notificationService.showSuccess('Availability period deleted');
       },
       error: (err) => this.notificationService.showHttpError(err, 'Failed to delete availability period')
+    });
+  }
+
+  onReserve(): void {
+    const acc = this.accommodation();
+    if (!acc) return;
+
+    const dialogRef = this.dialog.open<ReservationDialogComponent, ReservationDialogData, ReservationResponse>(
+      ReservationDialogComponent,
+      {
+        data: {
+          accommodation: acc,
+          availability: this.availability()
+        },
+        width: '400px'
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.notificationService.showSuccess('Reservation request submitted');
+      }
     });
   }
 }

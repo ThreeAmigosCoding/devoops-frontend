@@ -2,10 +2,10 @@
   <header class="list-header">
     <h1>Explore Accommodations</h1>
     @if (isHost) {
-      <a mat-flat-button color="primary" routerLink="create">
+      <button mat-flat-button color="primary" (click)="openCreateDialog()">
         <mat-icon>add</mat-icon>
         Create Listing
-      </a>
+      </button>
     }
   </header>
 
@@ -33,10 +33,10 @@
       <h2>No accommodations yet</h2>
       <p>Be the first to create a listing!</p>
       @if (isHost) {
-        <a mat-flat-button color="primary" routerLink="create">
+        <button mat-flat-button color="primary" (click)="openCreateDialog()">
           <mat-icon>add</mat-icon>
           Create Listing
-        </a>
+        </button>
       }
     </div>
   }
