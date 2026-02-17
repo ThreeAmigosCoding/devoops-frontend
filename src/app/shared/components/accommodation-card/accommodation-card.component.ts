@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AccommodationResponse, AmenityType } from '@core/models/accommodation.model';
 import { AccommodationService } from '@core/services/accommodation.service';
+import { TokenService } from '@core/auth/services/token.service';
 import { AMENITY_ICONS } from '@shared/constants/amenity-icons';
 
 @Component({
@@ -28,6 +29,7 @@ export class AccommodationCardComponent implements OnInit {
 
   private readonly router = inject(Router);
   private readonly accommodationService = inject(AccommodationService);
+  private readonly tokenService = inject(TokenService);
 
   photoUrl = signal<string | null>(null);
   imageLoading = signal(true);
@@ -71,6 +73,11 @@ export class AccommodationCardComponent implements OnInit {
 
   navigateToDetail(): void {
     this.router.navigate(['/accommodations', this.accommodation.id]);
+  }
+
+  get isOwner(): boolean {
+    const user = this.tokenService.getUserFromToken();
+    return !!user && user.userId === this.accommodation.hostId;
   }
 
   get displayedAmenities(): AmenityType[] {

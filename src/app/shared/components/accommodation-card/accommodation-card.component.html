@@ -1,5 +1,11 @@
 <mat-card class="accommodation-card" (click)="navigateToDetail()" (keydown.enter)="navigateToDetail()" tabindex="0">
   <div class="card-image-container">
+    @if (isOwner) {
+      <div class="owner-badge" matTooltip="Your listing">
+        <mat-icon>home_work</mat-icon>
+      </div>
+    }
+
     @if (imageLoading()) {
       <div class="image-placeholder">
         <mat-spinner diameter="32"></mat-spinner>

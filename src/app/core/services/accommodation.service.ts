@@ -1,10 +1,12 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import {
   AccommodationResponse,
   AccommodationPhotoResponse,
   AvailabilityPeriodResponse,
+  CreateAccommodationRequest,
   CreateAvailabilityPeriodRequest,
   UpdateAvailabilityPeriodRequest,
   PageResponse
@@ -16,6 +18,11 @@ import { environment } from '@environments/environment';
 })
 export class AccommodationService {
   private readonly api = inject(ApiService);
+  private readonly http = inject(HttpClient);
+
+  create(request: CreateAccommodationRequest): Observable<AccommodationResponse> {
+    return this.api.post<AccommodationResponse>('/accommodation', request);
+  }
 
   getAll(page = 0, size = 12): Observable<PageResponse<AccommodationResponse>> {
     return this.api.get<PageResponse<AccommodationResponse>>('/accommodation', { page, size });
@@ -31,6 +38,14 @@ export class AccommodationService {
 
   getPhotos(accommodationId: string): Observable<AccommodationPhotoResponse[]> {
     return this.api.get<AccommodationPhotoResponse[]>(`/accommodation/${accommodationId}/photos`);
+  }
+
+  uploadPhotos(accommodationId: string, files: File[]): Observable<AccommodationPhotoResponse[]> {
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+    return this.http.post<AccommodationPhotoResponse[]>(
+      `${environment.apiUrl}/accommodation/${accommodationId}/photos`, formData
+    );
   }
 
   getPhotoUrl(accommodationId: string, photoId: string): string {

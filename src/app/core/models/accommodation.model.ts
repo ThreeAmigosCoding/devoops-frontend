@@ -21,6 +21,16 @@ export enum ApprovalMode {
   MANUAL = 'MANUAL'
 }
 
+export interface CreateAccommodationRequest {
+  name: string;
+  address: string;
+  minGuests: number;
+  maxGuests: number;
+  pricingMode: PricingMode;
+  approvalMode: ApprovalMode;
+  amenities: AmenityType[];
+}
+
 export interface AccommodationResponse {
   id: string;
   hostId: string;
