@@ -3,6 +3,7 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0;
+    color: var(--mat-sys-on-surface, #1a1a1a);
   }
 }
 
@@ -24,9 +25,9 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--mat-sys-surface-container-lowest, #fafafa);
 
   @media (max-width: 599px) {
     flex-direction: column;
@@ -43,16 +44,17 @@
 
   .date {
     font-weight: 500;
+    color: var(--mat-sys-on-surface, #1a1a1a);
   }
 
   .separator {
-    color: #999;
+    color: var(--mat-sys-on-surface-variant, #999);
   }
 }
 
 .period-price {
   font-weight: 600;
-  color: #333;
+  color: var(--mat-sys-on-surface, #333);
   white-space: nowrap;
 }
 
@@ -67,7 +69,7 @@
 }
 
 .no-periods {
-  color: #999;
+  color: var(--mat-sys-on-surface-variant, #999);
   font-style: italic;
   padding: 1rem 0;
 }

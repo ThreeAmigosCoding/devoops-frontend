@@ -63,7 +63,7 @@ export class TopbarComponent {
   }
 
   openProfile(): void {
-    this.dialog.open(ProfileDialogComponent, { minWidth: '600px' });
+    this.dialog.open(ProfileDialogComponent, { width: '80vw', maxWidth: '1000px' });
   }
 
   onLogout(): void {
