@@ -1,0 +1,147 @@
+<div class="reservation-list-container">
+  <header class="list-header">
+    <h1>{{ isHost ? 'Reservation Requests' : 'My Reservations' }}</h1>
+    @if (!loading() && !error() && reservations().length > 0) {
+      <mat-button-toggle-group
+        [value]="selectedStatus()"
+        (change)="selectedStatus.set($event.value)">
+        @for (s of statusFilters; track s) {
+          <mat-button-toggle [value]="s">{{ s }}</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading reservations...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" (click)="retry()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+  }
+
+  @if (!loading() && !error() && reservations().length === 0) {
+    <div class="empty-container">
+      <mat-icon>calendar_month</mat-icon>
+      <h2>No reservations yet</h2>
+      <p>{{ isGuest ? 'You have no reservation requests.' : 'No guests have reserved your accommodations yet.' }}</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && reservations().length > 0 && filteredReservations().length === 0) {
+    <div class="empty-container">
+      <mat-icon>filter_list_off</mat-icon>
+      <h2>No matches</h2>
+      <p>No reservations with status "{{ selectedStatus() }}".</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && filteredReservations().length > 0) {
+    <div class="reservation-list">
+      @for (reservation of filteredReservations(); track reservation.id) {
+        <mat-card class="reservation-card status-{{ reservation.status | lowercase }}">
+          <div class="card-header">
+            <span class="status-chip status-chip-{{ reservation.status | lowercase }}">
+              {{ reservation.status }}
+            </span>
+            <span class="price">{{ reservation.totalPrice | currency }}</span>
+          </div>
+
+          <mat-card-content class="card-body">
+            <div class="info-item">
+              <mat-icon>home</mat-icon>
+              <button
+                mat-button
+                class="accommodation-link"
+                (click)="navigateToAccommodation(reservation.accommodationId)">
+                {{ accommodationNames().get(reservation.accommodationId) || 'View Accommodation' }}
+              </button>
+            </div>
+            <div class="info-item info-item--right">
+              <mat-icon>people</mat-icon>
+              <span>{{ reservation.guestCount }} {{ reservation.guestCount === 1 ? 'guest' : 'guests' }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ reservation.startDate | date:'mediumDate' }} – {{ reservation.endDate | date:'mediumDate' }}</span>
+            </div>
+            @if (isHost) {
+              <div class="info-item info-item--right">
+                <mat-icon>person</mat-icon>
+                <span>{{ guestNames().get(reservation.guestId) || ('Guest: ' + reservation.guestId.substring(0, 8) + '…') }}</span>
+              </div>
+            }
+          </mat-card-content>
+
+          @if (isGuest) {
+            <mat-card-actions class="card-footer">
+              <span class="created-at">Requested {{ reservation.createdAt | date:'mediumDate' }}</span>
+
+              @if (confirmingId() === reservation.id) {
+                <div class="inline-confirm">
+                  <span class="confirm-text">Are you sure?</span>
+                  <button
+                    mat-flat-button
+                    color="warn"
+                    [disabled]="actionInProgress() === reservation.id"
+                    (click)="reservation.status === ReservationStatus.PENDING ? deleteRequest(reservation.id) : cancelReservation(reservation.id)">
+                    @if (actionInProgress() === reservation.id) {
+                      <mat-spinner diameter="18"></mat-spinner>
+                    } @else {
+                      Yes
+                    }
+                  </button>
+                  <button mat-stroked-button (click)="cancelConfirm()">No</button>
+                </div>
+              } @else {
+                <div class="action-buttons">
+                  @if (reservation.status === ReservationStatus.PENDING) {
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      [disabled]="actionInProgress() !== null"
+                      (click)="startConfirm(reservation.id)">
+                      <mat-icon>delete_outline</mat-icon>
+                      Delete Request
+                    </button>
+                  }
+                  @if (reservation.status === ReservationStatus.APPROVED && canCancel(reservation)) {
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      [disabled]="actionInProgress() !== null"
+                      (click)="startConfirm(reservation.id)">
+                      <mat-icon>cancel</mat-icon>
+                      Cancel
+                    </button>
+                  }
+                  @if (reservation.status === ReservationStatus.APPROVED && !canCancel(reservation)) {
+                    <span matTooltip="Must cancel at least 1 day before check-in">
+                      <button
+                        mat-stroked-button
+                        color="warn"
+                        disabled>
+                        <mat-icon>cancel</mat-icon>
+                        Cancel
+                      </button>
+                    </span>
+                  }
+                </div>
+              }
+            </mat-card-actions>
+          }
+        </mat-card>
+      }
+    </div>
+  }
+</div>
