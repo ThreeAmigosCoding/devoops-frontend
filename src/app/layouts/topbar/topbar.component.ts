@@ -33,7 +33,7 @@ export class TopbarComponent {
 
   protected readonly navItems: NavItem[] = [
     { label: 'Accommodations', path: '/accommodations' },
-    { label: 'My Reservations', path: '/reservations', roles: [UserRole.GUEST] },
+    { label: 'Reservations', path: '/reservations', roles: [UserRole.GUEST, UserRole.HOST] },
     { label: 'Ratings', path: '/ratings', roles: [UserRole.GUEST] }
   ];
 

@@ -16,6 +16,10 @@ export class UserService {
     return this.api.get<User>('/user/me');
   }
 
+  getById(id: string): Observable<User> {
+    return this.api.get<User>(`/user/${id}`);
+  }
+
   updateProfile(data: UpdateProfileRequest): Observable<AuthResponse> {
     return this.api.put<AuthResponse>('/user/me', data).pipe(
       tap(response => this.authService.handleAuthResponse(response))

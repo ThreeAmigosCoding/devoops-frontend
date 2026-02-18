@@ -72,7 +72,7 @@ export class AccommodationCardComponent implements OnInit {
   }
 
   navigateToDetail(): void {
-    this.router.navigate(['/accommodations', this.accommodation.id]);
+    void this.router.navigate(['/accommodations', this.accommodation.id]);
   }
 
   get isOwner(): boolean {
