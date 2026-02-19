@@ -76,6 +76,19 @@ export interface UpdateAvailabilityPeriodRequest {
   pricePerDay?: number;
 }
 
+export interface AccommodationSearchResponse extends AccommodationResponse {
+  totalPrice: number;
+  unitPrice: number;
+  numberOfNights: number;
+}
+
+export interface AccommodationSearchParams {
+  location: string;
+  guests: number;
+  startDate: string;
+  endDate: string;
+}
+
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;

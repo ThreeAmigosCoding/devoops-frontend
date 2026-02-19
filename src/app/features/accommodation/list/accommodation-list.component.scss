@@ -91,6 +91,12 @@
   }
 }
 
+.results-count {
+  font-size: 0.95rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin: 0 0 1rem;
+}
+
 .load-more-container {
   display: flex;
   justify-content: center;

@@ -7,9 +7,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AccommodationCardComponent } from '@shared/components/accommodation-card/accommodation-card.component';
 import { AccommodationService } from '@core/services/accommodation.service';
 import { AuthService } from '@core/auth/services/auth.service';
-import { AccommodationResponse } from '@core/models/accommodation.model';
+import { AccommodationResponse, AccommodationSearchResponse, AccommodationSearchParams } from '@core/models/accommodation.model';
 import { UserRole } from '@core/models/user.model';
 import { AccommodationCreateComponent } from '../create/accommodation-create.component';
+import { AccommodationSearchFormComponent } from './accommodation-search-form.component';
 
 @Component({
   selector: 'app-accommodation-list',
@@ -19,7 +20,8 @@ import { AccommodationCreateComponent } from '../create/accommodation-create.com
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
-    AccommodationCardComponent
+    AccommodationCardComponent,
+    AccommodationSearchFormComponent
   ],
   templateUrl: './accommodation-list.component.html',
   styleUrl: './accommodation-list.component.scss'
@@ -37,6 +39,9 @@ export class AccommodationListComponent implements OnInit {
   totalPages = signal(0);
   hasMore = signal(false);
   loadingMore = signal(false);
+
+  isSearchMode = signal(false);
+  searchResults = signal<AccommodationSearchResponse[]>([]);
 
   get isHost(): boolean {
     return this.authService.hasRole(UserRole.HOST);
@@ -84,6 +89,30 @@ export class AccommodationListComponent implements OnInit {
         console.error('Error loading more accommodations:', err);
       }
     });
+  }
+
+  onSearch(params: AccommodationSearchParams): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.isSearchMode.set(true);
+
+    this.accommodationService.search(params).subscribe({
+      next: (results) => {
+        this.searchResults.set(results);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set('Search failed. Please check your parameters and try again.');
+        this.loading.set(false);
+        console.error('Error searching accommodations:', err);
+      }
+    });
+  }
+
+  onClearSearch(): void {
+    this.isSearchMode.set(false);
+    this.searchResults.set([]);
+    this.error.set(null);
   }
 
   retry(): void {
