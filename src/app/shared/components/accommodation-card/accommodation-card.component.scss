@@ -150,3 +150,32 @@
   padding: 2px 8px;
   border-radius: 12px;
 }
+
+.price-section {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+}
+
+.total-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+
+  .price-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--mat-sys-primary, #0D5C63);
+  }
+
+  .price-label {
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant, #666);
+  }
+}
+
+.unit-price {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 2px;
+}

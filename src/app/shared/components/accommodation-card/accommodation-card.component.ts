@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AccommodationResponse, AmenityType } from '@core/models/accommodation.model';
+import { AccommodationResponse, AmenityType, PricingMode } from '@core/models/accommodation.model';
 import { AccommodationService } from '@core/services/accommodation.service';
 import { TokenService } from '@core/auth/services/token.service';
 import { AMENITY_ICONS } from '@shared/constants/amenity-icons';
@@ -26,6 +26,12 @@ import { AMENITY_ICONS } from '@shared/constants/amenity-icons';
 })
 export class AccommodationCardComponent implements OnInit {
   @Input({ required: true }) accommodation!: AccommodationResponse;
+  @Input() totalPrice?: number;
+  @Input() unitPrice?: number;
+  @Input() numberOfNights?: number;
+  @Input() showPrice = false;
+
+  readonly PricingMode = PricingMode;
 
   private readonly router = inject(Router);
   private readonly accommodationService = inject(AccommodationService);

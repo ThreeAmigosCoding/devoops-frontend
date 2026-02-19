@@ -9,10 +9,15 @@
     }
   </header>
 
+  <app-accommodation-search-form
+    (searchEvent)="onSearch($event)"
+    (clearEvent)="onClearSearch()">
+  </app-accommodation-search-form>
+
   @if (loading()) {
     <div class="loading-container">
       <mat-spinner diameter="48"></mat-spinner>
-      <p>Loading accommodations...</p>
+      <p>{{ isSearchMode() ? 'Searching...' : 'Loading accommodations...' }}</p>
     </div>
   }
 
@@ -20,48 +25,73 @@
     <div class="error-container">
       <mat-icon>error_outline</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-flat-button color="primary" (click)="retry()">
-        <mat-icon>refresh</mat-icon>
-        Try Again
-      </button>
-    </div>
-  }
-
-  @if (!loading() && !error() && accommodations().length === 0) {
-    <div class="empty-container">
-      <mat-icon>home_work</mat-icon>
-      <h2>No accommodations yet</h2>
-      <p>Be the first to create a listing!</p>
-      @if (isHost) {
-        <button mat-flat-button color="primary" (click)="openCreateDialog()">
-          <mat-icon>add</mat-icon>
-          Create Listing
+      @if (!isSearchMode()) {
+        <button mat-flat-button color="primary" (click)="retry()">
+          <mat-icon>refresh</mat-icon>
+          Try Again
         </button>
       }
     </div>
   }
 
-  @if (!loading() && !error() && accommodations().length > 0) {
-    <div class="accommodation-grid">
-      @for (accommodation of accommodations(); track accommodation.id) {
-        <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
-      }
-    </div>
-
-    @if (hasMore()) {
-      <div class="load-more-container">
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="loadMore()"
-          [disabled]="loadingMore()">
-          @if (loadingMore()) {
-            <mat-spinner diameter="20"></mat-spinner>
-          } @else {
-            Load More
-          }
-        </button>
+  @if (isSearchMode() && !loading() && !error()) {
+    @if (searchResults().length === 0) {
+      <div class="empty-container">
+        <mat-icon>search_off</mat-icon>
+        <h2>No results found</h2>
+        <p>Try adjusting your search criteria</p>
       </div>
+    } @else {
+      <p class="results-count">Found {{ searchResults().length }} accommodation{{ searchResults().length === 1 ? '' : 's' }}</p>
+      <div class="accommodation-grid">
+        @for (result of searchResults(); track result.id) {
+          <app-accommodation-card
+            [accommodation]="result"
+            [showPrice]="true"
+            [totalPrice]="result.totalPrice"
+            [unitPrice]="result.unitPrice"
+            [numberOfNights]="result.numberOfNights">
+          </app-accommodation-card>
+        }
+      </div>
+    }
+  }
+
+  @if (!isSearchMode() && !loading() && !error()) {
+    @if (accommodations().length === 0) {
+      <div class="empty-container">
+        <mat-icon>home_work</mat-icon>
+        <h2>No accommodations yet</h2>
+        <p>Be the first to create a listing!</p>
+        @if (isHost) {
+          <button mat-flat-button color="primary" (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            Create Listing
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="accommodation-grid">
+        @for (accommodation of accommodations(); track accommodation.id) {
+          <app-accommodation-card [accommodation]="accommodation"></app-accommodation-card>
+        }
+      </div>
+
+      @if (hasMore()) {
+        <div class="load-more-container">
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="loadMore()"
+            [disabled]="loadingMore()">
+            @if (loadingMore()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Load More
+            }
+          </button>
+        </div>
+      }
     }
   }
 </div>

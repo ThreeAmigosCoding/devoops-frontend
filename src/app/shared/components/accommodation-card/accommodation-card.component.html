@@ -58,5 +58,18 @@
         }
       </div>
     }
+
+    @if (showPrice && totalPrice != null && unitPrice != null) {
+      <div class="price-section">
+        <div class="total-price">
+          <span class="price-amount">${{ totalPrice | number:'1.2-2' }}</span>
+          <span class="price-label">total for {{ numberOfNights }} night{{ numberOfNights === 1 ? '' : 's' }}</span>
+        </div>
+        <div class="unit-price">
+          <span>${{ unitPrice | number:'1.2-2' }}</span>
+          <span>{{ accommodation.pricingMode === PricingMode.PER_GUEST ? '/ guest / night' : '/ night' }}</span>
+        </div>
+      </div>
+    }
   </mat-card-content>
 </mat-card>

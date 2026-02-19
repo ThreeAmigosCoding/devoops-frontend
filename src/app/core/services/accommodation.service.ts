@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import {
   AccommodationResponse,
+  AccommodationSearchResponse,
+  AccommodationSearchParams,
   AccommodationPhotoResponse,
   AvailabilityPeriodResponse,
   CreateAccommodationRequest,
@@ -26,6 +28,10 @@ export class AccommodationService {
 
   getAll(page = 0, size = 12): Observable<PageResponse<AccommodationResponse>> {
     return this.api.get<PageResponse<AccommodationResponse>>('/accommodation', { page, size });
+  }
+
+  search(params: AccommodationSearchParams): Observable<AccommodationSearchResponse[]> {
+    return this.api.get<AccommodationSearchResponse[]>('/accommodation/search', params);
   }
 
   getById(id: string): Observable<AccommodationResponse> {
