@@ -42,7 +42,7 @@
         <p>Try adjusting your search criteria</p>
       </div>
     } @else {
-      <p class="results-count">Found {{ searchResults().length }} accommodation{{ searchResults().length === 1 ? '' : 's' }}</p>
+      <p class="results-count">Found {{ searchTotalElements() }} accommodation{{ searchTotalElements() === 1 ? '' : 's' }}</p>
       <div class="accommodation-grid">
         @for (result of searchResults(); track result.id) {
           <app-accommodation-card
@@ -54,6 +54,22 @@
           </app-accommodation-card>
         }
       </div>
+
+      @if (searchHasMore()) {
+        <div class="load-more-container">
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="loadMoreSearchResults()"
+            [disabled]="searchLoadingMore()">
+            @if (searchLoadingMore()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Load More
+            }
+          </button>
+        </div>
+      }
     }
   }
 
