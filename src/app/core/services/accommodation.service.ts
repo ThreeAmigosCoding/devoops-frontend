@@ -30,8 +30,8 @@ export class AccommodationService {
     return this.api.get<PageResponse<AccommodationResponse>>('/accommodation', { page, size });
   }
 
-  search(params: AccommodationSearchParams): Observable<AccommodationSearchResponse[]> {
-    return this.api.get<AccommodationSearchResponse[]>('/accommodation/search', params);
+  search(params: AccommodationSearchParams, page = 0, size = 12): Observable<PageResponse<AccommodationSearchResponse>> {
+    return this.api.get<PageResponse<AccommodationSearchResponse>>('/accommodation/search', { ...params, page, size });
   }
 
   getById(id: string): Observable<AccommodationResponse> {

@@ -42,6 +42,11 @@ export class AccommodationListComponent implements OnInit {
 
   isSearchMode = signal(false);
   searchResults = signal<AccommodationSearchResponse[]>([]);
+  searchCurrentPage = signal(0);
+  searchTotalElements = signal(0);
+  searchHasMore = signal(false);
+  searchLoadingMore = signal(false);
+  private lastSearchParams: AccommodationSearchParams | null = null;
 
   get isHost(): boolean {
     return this.authService.hasRole(UserRole.HOST);
@@ -95,10 +100,16 @@ export class AccommodationListComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     this.isSearchMode.set(true);
+    this.lastSearchParams = params;
+    this.searchResults.set([]);
+    this.searchCurrentPage.set(0);
 
-    this.accommodationService.search(params).subscribe({
-      next: (results) => {
-        this.searchResults.set(results);
+    this.accommodationService.search(params, 0, 12).subscribe({
+      next: (response) => {
+        this.searchResults.set(response.content);
+        this.searchCurrentPage.set(response.number);
+        this.searchTotalElements.set(response.totalElements);
+        this.searchHasMore.set(!response.last);
         this.loading.set(false);
       },
       error: (err) => {
@@ -109,9 +120,31 @@ export class AccommodationListComponent implements OnInit {
     });
   }
 
+  loadMoreSearchResults(): void {
+    if (this.searchLoadingMore() || !this.searchHasMore() || !this.lastSearchParams) return;
+
+    this.searchLoadingMore.set(true);
+    const nextPage = this.searchCurrentPage() + 1;
+
+    this.accommodationService.search(this.lastSearchParams, nextPage, 12).subscribe({
+      next: (response) => {
+        this.searchResults.update(current => [...current, ...response.content]);
+        this.searchCurrentPage.set(response.number);
+        this.searchHasMore.set(!response.last);
+        this.searchLoadingMore.set(false);
+      },
+      error: (err) => {
+        this.searchLoadingMore.set(false);
+        console.error('Error loading more search results:', err);
+      }
+    });
+  }
+
   onClearSearch(): void {
     this.isSearchMode.set(false);
     this.searchResults.set([]);
+    this.searchTotalElements.set(0);
+    this.lastSearchParams = null;
     this.error.set(null);
   }
 
