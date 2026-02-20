@@ -25,3 +25,7 @@ export interface ReservationResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ReservationWithGuestInfoResponse extends ReservationResponse {
+  guestCancellationCount: number;
+}
