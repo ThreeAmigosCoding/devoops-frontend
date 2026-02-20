@@ -14,7 +14,7 @@ import { NotificationService } from '@core/services/notification.service';
 import { ReservationService } from '@core/services/reservation.service';
 import { AccommodationService } from '@core/services/accommodation.service';
 import { UserService } from '@core/services/user.service';
-import { ReservationResponse, ReservationStatus } from '@core/models/reservation.model';
+import { ReservationResponse, ReservationStatus, ReservationWithGuestInfoResponse } from '@core/models/reservation.model';
 import { UserRole } from '@core/models/user.model';
 
 @Component({
@@ -41,13 +41,15 @@ export class ReservationListComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
 
-  reservations = signal<ReservationResponse[]>([]);
+  reservations = signal<(ReservationResponse | ReservationWithGuestInfoResponse)[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
   confirmingId = signal<string | null>(null);
   actionInProgress = signal<string | null>(null);
   accommodationNames = signal<Map<string, string>>(new Map());
   guestNames = signal<Map<string, string>>(new Map());
+  approvingId = signal<string | null>(null);
+  rejectingId = signal<string | null>(null);
 
   readonly ReservationStatus = ReservationStatus;
 
@@ -197,5 +199,62 @@ export class ReservationListComponent implements OnInit {
 
   navigateToAccommodation(accommodationId: string): void {
     void this.router.navigate(['/accommodations', accommodationId]);
+  }
+
+  startApprove(id: string): void {
+    this.approvingId.set(id);
+    this.rejectingId.set(null);
+  }
+
+  startReject(id: string): void {
+    this.rejectingId.set(id);
+    this.approvingId.set(null);
+  }
+
+  cancelHostConfirm(): void {
+    this.approvingId.set(null);
+    this.rejectingId.set(null);
+  }
+
+  approveReservation(id: string): void {
+    this.actionInProgress.set(id);
+    this.approvingId.set(null);
+
+    this.reservationService.approve(id).subscribe({
+      next: () => {
+        this.reservations.update(list =>
+          list.map(r => r.id === id ? { ...r, status: ReservationStatus.APPROVED } : r)
+        );
+        this.actionInProgress.set(null);
+        this.notificationService.showSuccess('Reservation approved.');
+      },
+      error: (err) => {
+        this.actionInProgress.set(null);
+        this.notificationService.showHttpError(err);
+      }
+    });
+  }
+
+  rejectReservation(id: string): void {
+    this.actionInProgress.set(id);
+    this.rejectingId.set(null);
+
+    this.reservationService.reject(id).subscribe({
+      next: () => {
+        this.reservations.update(list =>
+          list.map(r => r.id === id ? { ...r, status: ReservationStatus.REJECTED } : r)
+        );
+        this.actionInProgress.set(null);
+        this.notificationService.showSuccess('Reservation rejected.');
+      },
+      error: (err) => {
+        this.actionInProgress.set(null);
+        this.notificationService.showHttpError(err);
+      }
+    });
+  }
+
+  getGuestCancellationCount(reservation: ReservationResponse | ReservationWithGuestInfoResponse): number {
+    return 'guestCancellationCount' in reservation ? reservation.guestCancellationCount : 0;
   }
 }

@@ -212,6 +212,63 @@ mat-button-toggle-group {
   }
 }
 
+.cancellation-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .warning-icon {
+    color: #F59E0B;
+  }
+
+  .success-icon {
+    color: #10B981;
+  }
+}
+
+.host-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.approve-btn {
+  background-color: #10B981 !important;
+  color: white !important;
+
+  &:hover:not(:disabled) {
+    background-color: #059669 !important;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.reject-btn {
+  background-color: var(--mat-sys-error, #dc3545) !important;
+  color: white !important;
+
+  &:hover:not(:disabled) {
+    background-color: #b02a37 !important;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
 @media (max-width: 768px) {
   .reservation-list-container {
     padding: 1rem;

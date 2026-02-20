@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import {
   CreateReservationRequest,
-  ReservationResponse
+  ReservationResponse,
+  ReservationWithGuestInfoResponse
 } from '@core/models/reservation.model';
 
 @Injectable({
@@ -20,8 +21,8 @@ export class ReservationService {
     return this.api.get<ReservationResponse[]>('/reservation/guest');
   }
 
-  getByHost(): Observable<ReservationResponse[]> {
-    return this.api.get<ReservationResponse[]>('/reservation/host');
+  getByHost(): Observable<ReservationWithGuestInfoResponse[]> {
+    return this.api.get<ReservationWithGuestInfoResponse[]>('/reservation/host');
   }
 
   getById(id: string): Observable<ReservationResponse> {
@@ -34,5 +35,13 @@ export class ReservationService {
 
   cancel(id: string): Observable<void> {
     return this.api.post<void>(`/reservation/${id}/cancel`, {});
+  }
+
+  approve(id: string): Observable<ReservationResponse> {
+    return this.api.put<ReservationResponse>(`/reservation/${id}/approve`, {});
+  }
+
+  reject(id: string): Observable<ReservationResponse> {
+    return this.api.put<ReservationResponse>(`/reservation/${id}/reject`, {});
   }
 }

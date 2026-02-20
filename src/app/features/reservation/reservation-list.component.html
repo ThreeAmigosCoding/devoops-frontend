@@ -140,6 +140,77 @@
               }
             </mat-card-actions>
           }
+
+          @if (isHost) {
+            <mat-card-actions class="card-footer">
+              <span class="created-at">Requested {{ reservation.createdAt | date:'mediumDate' }}</span>
+
+              @if (reservation.status === ReservationStatus.PENDING) {
+                <div class="cancellation-warning">
+                  @if (getGuestCancellationCount(reservation) > 0) {
+                    <mat-icon class="warning-icon">warning</mat-icon>
+                    <span>This guest has cancelled {{ getGuestCancellationCount(reservation) }} reservation{{ getGuestCancellationCount(reservation) === 1 ? '' : 's' }}</span>
+                  } @else {
+                    <mat-icon class="success-icon">check_circle</mat-icon>
+                    <span>No prior cancellations</span>
+                  }
+                </div>
+
+                @if (approvingId() === reservation.id) {
+                  <div class="inline-confirm">
+                    <span class="confirm-text">Approve this reservation?</span>
+                    <button
+                      mat-flat-button
+                      class="approve-btn"
+                      [disabled]="actionInProgress() === reservation.id"
+                      (click)="approveReservation(reservation.id)">
+                      @if (actionInProgress() === reservation.id) {
+                        <mat-spinner diameter="18"></mat-spinner>
+                      } @else {
+                        Yes
+                      }
+                    </button>
+                    <button mat-stroked-button (click)="cancelHostConfirm()">No</button>
+                  </div>
+                } @else if (rejectingId() === reservation.id) {
+                  <div class="inline-confirm">
+                    <span class="confirm-text">Reject this reservation?</span>
+                    <button
+                      mat-flat-button
+                      color="warn"
+                      [disabled]="actionInProgress() === reservation.id"
+                      (click)="rejectReservation(reservation.id)">
+                      @if (actionInProgress() === reservation.id) {
+                        <mat-spinner diameter="18"></mat-spinner>
+                      } @else {
+                        Yes
+                      }
+                    </button>
+                    <button mat-stroked-button (click)="cancelHostConfirm()">No</button>
+                  </div>
+                } @else {
+                  <div class="host-actions">
+                    <button
+                      mat-flat-button
+                      class="approve-btn"
+                      [disabled]="actionInProgress() !== null"
+                      (click)="startApprove(reservation.id)">
+                      <mat-icon>check</mat-icon>
+                      Approve
+                    </button>
+                    <button
+                      mat-flat-button
+                      class="reject-btn"
+                      [disabled]="actionInProgress() !== null"
+                      (click)="startReject(reservation.id)">
+                      <mat-icon>close</mat-icon>
+                      Reject
+                    </button>
+                  </div>
+                }
+              }
+            </mat-card-actions>
+          }
         </mat-card>
       }
     </div>
