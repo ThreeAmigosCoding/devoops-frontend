@@ -8,8 +8,10 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { UserService } from '@core/services/user.service';
 import { NotificationService } from '@core/services/notification.service';
+import { AuthService } from '@core/auth/services/auth.service';
 import { User, AuthResponse, UpdateProfileRequest } from '@core/models/user.model';
 import { ChangePasswordDialogComponent } from './change-password-dialog.component';
+import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog.component';
 import { NotificationPreferencesSectionComponent } from './notification-preferences-section.component';
 
 @Component({
@@ -24,12 +26,14 @@ export class ProfileDialogComponent implements OnInit, AfterViewInit {
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
   private readonly notificationService = inject(NotificationService);
+  private readonly authService = inject(AuthService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChild('profileForm') profileForm?: NgForm;
 
   user: User | null = null;
   isEditMode = false;
+  isDeleting = false;
   editForm: UpdateProfileRequest = {};
 
   ngOnInit(): void {
@@ -92,6 +96,38 @@ export class ProfileDialogComponent implements OnInit, AfterViewInit {
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  onDeleteAccount(): void {
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        title: 'Delete Account',
+        message: 'Are you sure you want to delete your account? This action cannot be undone.',
+        confirmButtonText: 'Delete Account',
+        cancelButtonText: 'Cancel'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed === true) {
+        this.performAccountDeletion();
+      }
+    });
+  }
+
+  private performAccountDeletion(): void {
+    this.isDeleting = true;
+    this.userService.deleteAccount().subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Your account has been deleted.');
+        this.dialogRef.close();
+        this.authService.logout();
+      },
+      error: (error) => {
+        this.isDeleting = false;
+        this.notificationService.showHttpError(error, 'Failed to delete account.');
+      }
+    });
   }
 
   isFormValid(): boolean {
