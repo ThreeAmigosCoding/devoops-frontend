@@ -53,6 +53,9 @@
       <button mat-icon-button (click)="onChangePassword()" aria-label="Change Password">
         <mat-icon>key</mat-icon>
       </button>
+      <button mat-icon-button color="warn" (click)="onDeleteAccount()" aria-label="Delete Account" [disabled]="isDeleting">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
       <span class="spacer"></span>
       <button mat-icon-button (click)="onEdit()" aria-label="Edit">
         <mat-icon>edit</mat-icon>

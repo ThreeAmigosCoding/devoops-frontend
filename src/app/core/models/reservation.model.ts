@@ -15,8 +15,11 @@ export interface CreateReservationRequest {
 export interface ReservationResponse {
   id: string;
   accommodationId: string;
+  accommodationName: string;
   guestId: string;
+  guestName: string;
   hostId: string;
+  hostName: string;
   startDate: string;
   endDate: string;
   guestCount: number;

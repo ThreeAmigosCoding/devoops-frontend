@@ -64,7 +64,7 @@
                 mat-button
                 class="accommodation-link"
                 (click)="navigateToAccommodation(reservation.accommodationId)">
-                {{ accommodationNames().get(reservation.accommodationId) || 'View Accommodation' }}
+                {{ reservation.accommodationName || 'View Accommodation' }}
               </button>
             </div>
             <div class="info-item info-item--right">
@@ -78,7 +78,7 @@
             @if (isHost) {
               <div class="info-item info-item--right">
                 <mat-icon>person</mat-icon>
-                <span>{{ guestNames().get(reservation.guestId) || ('Guest: ' + reservation.guestId.substring(0, 8) + '…') }}</span>
+                <span>{{ reservation.guestName || 'Unknown Guest' }}</span>
               </div>
             }
           </mat-card-content>
