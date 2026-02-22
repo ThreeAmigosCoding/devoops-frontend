@@ -25,8 +25,12 @@ export class PhotoGalleryComponent {
     return this.photos[this.selectedIndex()] ?? null;
   }
 
-  get thumbnailPhotos(): AccommodationPhotoResponse[] {
-    return this.photos.slice(0, 5);
+  prevPhoto(): void {
+    this.selectedIndex.update(i => (i - 1 + this.photos.length) % this.photos.length);
+  }
+
+  nextPhoto(): void {
+    this.selectedIndex.update(i => (i + 1) % this.photos.length);
   }
 
   getPhotoUrl(photo: AccommodationPhotoResponse): string {
@@ -47,10 +51,10 @@ export class PhotoGalleryComponent {
 
   @HostListener('window:keydown', ['$event'])
   handleKeydown(event: KeyboardEvent): void {
-    if (event.key === 'ArrowLeft' && this.selectedIndex() > 0) {
-      this.selectedIndex.update(i => i - 1);
-    } else if (event.key === 'ArrowRight' && this.selectedIndex() < this.photos.length - 1) {
-      this.selectedIndex.update(i => i + 1);
+    if (event.key === 'ArrowLeft') {
+      this.prevPhoto();
+    } else if (event.key === 'ArrowRight') {
+      this.nextPhoto();
     }
   }
 }

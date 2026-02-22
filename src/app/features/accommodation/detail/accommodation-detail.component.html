@@ -18,63 +18,18 @@
       <h1>{{ accommodation()!.name }}</h1>
     </div>
 
-    <!-- Photo Gallery -->
-    <app-photo-gallery
-      [photos]="photos()"
-      [accommodationId]="accommodation()!.id"
-      [accommodationService]="accommodationService"
-    ></app-photo-gallery>
-
-    <!-- Content area -->
-    <div class="detail-content">
-      <!-- Main details -->
-      <div class="detail-main">
-        <!-- Quick info -->
-        <div class="quick-info">
-          <div class="info-item">
-            <mat-icon>location_on</mat-icon>
-            <span>{{ accommodation()!.address }}</span>
-          </div>
-          <div class="info-item">
-            <mat-icon>group</mat-icon>
-            <span>{{ guestCapacity() }}</span>
-          </div>
-          <div class="info-item">
-            <mat-icon>payments</mat-icon>
-            <span>{{ pricingModeLabel() }}</span>
-          </div>
-          <div class="info-item">
-            <mat-icon>{{ accommodation()!.approvalMode === 'AUTOMATIC' ? 'check_circle' : 'pending' }}</mat-icon>
-            <span>{{ approvalModeLabel() }}</span>
-          </div>
-        </div>
-
-        <mat-divider></mat-divider>
-
-        <!-- Amenities -->
-        <app-amenities-list [amenities]="accommodation()!.amenities"></app-amenities-list>
-
-        <mat-divider></mat-divider>
-
-        <!-- Availability -->
-        <app-availability-section
-          [periods]="availability()"
-          [isOwner]="isOwner()"
-          [pricingMode]="accommodation()!.pricingMode"
-          (addPeriod)="onAddPeriod($event)"
-          (editPeriod)="onEditPeriod($event)"
-          (deletePeriod)="onDeletePeriod($event)"
-        ></app-availability-section>
-
-        <mat-divider></mat-divider>
-        <app-accommodation-ratings
+    <!-- Row 1: Photo Gallery + Reservation/Details/Amenities -->
+    <div class="detail-row-1">
+      <div class="row1-left">
+        <app-photo-gallery
+          [photos]="photos()"
           [accommodationId]="accommodation()!.id"
-          [hostId]="accommodation()!.hostId"
-        ></app-accommodation-ratings>
+          [accommodationService]="accommodationService"
+        ></app-photo-gallery>
       </div>
 
-      <!-- Sidebar -->
-      <div class="detail-sidebar">
+      <div class="row1-right">
+        <!-- Reservation card -->
         <div class="sidebar-card">
           @if (isOwner()) {
             <div class="owner-badge">
@@ -100,6 +55,56 @@
             }
           }
         </div>
+
+        <!-- Quick info -->
+        <div class="quick-info-section">
+          <h3>Details</h3>
+          <div class="quick-info">
+            <div class="info-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ accommodation()!.address }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>group</mat-icon>
+              <span>{{ guestCapacity() }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>payments</mat-icon>
+              <span>{{ pricingModeLabel() }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>{{ accommodation()!.approvalMode === 'AUTOMATIC' ? 'check_circle' : 'pending' }}</mat-icon>
+              <span>{{ approvalModeLabel() }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Row 2: Amenities (full width) -->
+    <div class="detail-row-2">
+      <app-amenities-list [amenities]="accommodation()!.amenities"></app-amenities-list>
+    </div>
+
+    <!-- Row 3: Ratings + Availability -->
+    <div class="detail-row-3">
+      <div class="row3-left">
+        <app-accommodation-ratings
+          [accommodationId]="accommodation()!.id"
+          [hostId]="accommodation()!.hostId"
+        ></app-accommodation-ratings>
+      </div>
+
+      <div class="row3-right">
+        <app-availability-section
+          [periods]="availability()"
+          [isOwner]="isOwner()"
+          [pricingMode]="accommodation()!.pricingMode"
+          (addPeriod)="onAddPeriod($event)"
+          (editPeriod)="onEditPeriod($event)"
+          (deletePeriod)="onDeletePeriod($event)"
+        ></app-availability-section>
       </div>
     </div>
   </div>

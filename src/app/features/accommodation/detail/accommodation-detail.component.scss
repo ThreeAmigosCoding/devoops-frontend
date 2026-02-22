@@ -42,21 +42,68 @@
   }
 }
 
-.detail-content {
+// Row 1: Gallery (left) + Reservation/Details/Amenities (right)
+.detail-row-1 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  margin-top: 2rem;
+  margin-bottom: 1.5rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-.detail-main {
+.row1-left {
   display: flex;
   flex-direction: column;
+
+  @media (min-width: 768px) {
+    overflow: hidden;
+  }
+}
+
+.row1-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// Row 2: Amenities (full width)
+.detail-row-2 {
+  margin-bottom: 1.5rem;
+  border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+  padding-top: 1.5rem;
+}
+
+// Row 3: Ratings (left) + Availability (right)
+.detail-row-3 {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 2rem;
+  margin-bottom: 2rem;
+  border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+  padding-top: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.row3-left,
+.row3-right {
+  display: flex;
+  flex-direction: column;
+}
+
+// Quick info section
+.quick-info-section {
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: var(--mat-sys-on-surface, #1a1a1a);
+  }
 }
 
 .quick-info {
@@ -80,15 +127,7 @@
   }
 }
 
-// Sidebar
-.detail-sidebar {
-  @media (min-width: 768px) {
-    position: sticky;
-    top: 2rem;
-    align-self: start;
-  }
-}
-
+// Sidebar card (reservation card)
 .sidebar-card {
   border: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
   border-radius: 12px;

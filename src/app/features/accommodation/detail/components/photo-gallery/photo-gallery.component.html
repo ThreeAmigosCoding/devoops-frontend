@@ -1,70 +1,37 @@
-@if (photos.length > 0) {
-  <!-- Desktop layout -->
-  <div class="gallery-desktop">
-    <div class="main-image-container">
-      @if (mainPhoto) {
-        <img
-          [src]="getPhotoUrl(mainPhoto)"
-          [alt]="mainPhoto.originalFilename"
-          class="main-image"
-          (load)="onImageLoad(mainPhoto.id)"
-          (error)="onImageError(mainPhoto.id)"
-        />
-      }
-    </div>
+<div class="gallery-container">
+  @if (photos.length > 0) {
+    <div class="main-image-wrapper">
+      <img
+        [src]="getPhotoUrl(mainPhoto!)"
+        [alt]="mainPhoto!.originalFilename"
+        class="main-image"
+        (load)="onImageLoad(mainPhoto!.id)"
+        (error)="onImageError(mainPhoto!.id)"
+      />
 
-    @if (photos.length > 1) {
-      <div class="thumbnail-grid">
-        @for (photo of thumbnailPhotos; track photo.id; let i = $index) {
-          @if (i !== selectedIndex()) {
-            <div
-              class="thumbnail-container"
+      @if (photos.length > 1) {
+        <button class="nav-btn nav-prev" (click)="prevPhoto()" aria-label="Previous photo">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button class="nav-btn nav-next" (click)="nextPhoto()" aria-label="Next photo">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <div class="dots-container">
+          @for (photo of photos; track photo.id; let i = $index) {
+            <button
+              class="dot"
               [class.active]="i === selectedIndex()"
               (click)="selectPhoto(i)"
-            >
-              <img
-                [src]="getPhotoUrl(photo)"
-                [alt]="photo.originalFilename"
-                class="thumbnail"
-                (load)="onImageLoad(photo.id)"
-                (error)="onImageError(photo.id)"
-              />
-            </div>
+              [attr.aria-label]="'Go to photo ' + (i + 1)"
+            ></button>
           }
-        }
-      </div>
-    }
-  </div>
-
-  <!-- Mobile layout -->
-  <div class="gallery-mobile">
-    <div class="scroll-container">
-      @for (photo of photos; track photo.id; let i = $index) {
-        <div class="scroll-item">
-          <img
-            [src]="getPhotoUrl(photo)"
-            [alt]="photo.originalFilename"
-            (load)="onImageLoad(photo.id)"
-            (error)="onImageError(photo.id)"
-          />
         </div>
       }
     </div>
-    @if (photos.length > 1) {
-      <div class="dot-indicators">
-        @for (photo of photos; track photo.id; let i = $index) {
-          <span
-            class="dot"
-            [class.active]="i === selectedIndex()"
-            (click)="selectPhoto(i)"
-          ></span>
-        }
-      </div>
-    }
-  </div>
-} @else {
-  <div class="no-photos">
-    <mat-icon>image</mat-icon>
-    <p>No photos available</p>
-  </div>
-}
+  } @else {
+    <div class="no-photos">
+      <mat-icon>image</mat-icon>
+      <p>No photos available</p>
+    </div>
+  }
+</div>
