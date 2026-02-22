@@ -65,6 +65,12 @@
           (editPeriod)="onEditPeriod($event)"
           (deletePeriod)="onDeletePeriod($event)"
         ></app-availability-section>
+
+        <mat-divider></mat-divider>
+        <app-accommodation-ratings
+          [accommodationId]="accommodation()!.id"
+          [hostId]="accommodation()!.hostId"
+        ></app-accommodation-ratings>
       </div>
 
       <!-- Sidebar -->

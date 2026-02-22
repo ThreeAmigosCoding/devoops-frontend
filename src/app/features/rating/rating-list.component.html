@@ -1,0 +1,69 @@
+<div class="rating-list-container">
+  <header class="list-header">
+    <h1>My Ratings</h1>
+    @if (!loading() && !error() && ratings().length > 0) {
+      <mat-button-toggle-group
+        [value]="selectedType()"
+        (change)="selectedType.set($event.value)">
+        <mat-button-toggle value="ALL">All</mat-button-toggle>
+        <mat-button-toggle value="ACCOMMODATION">Accommodations</mat-button-toggle>
+        <mat-button-toggle value="HOST">Hosts</mat-button-toggle>
+      </mat-button-toggle-group>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="state-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading ratings...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="state-container error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" (click)="loadRatings()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+  }
+
+  @if (!loading() && !error() && ratings().length === 0) {
+    <div class="state-container">
+      <mat-icon>star_border</mat-icon>
+      <h2>No ratings yet</h2>
+      <p>You haven't rated any accommodations or hosts yet.</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && ratings().length > 0 && filteredRatings().length === 0) {
+    <div class="state-container">
+      <mat-icon>filter_list_off</mat-icon>
+      <h2>No matches</h2>
+      <p>No ratings of type "{{ selectedType() }}".</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && filteredRatings().length > 0) {
+    <div class="ratings-grid">
+      @for (rating of filteredRatings(); track rating.id) {
+        <mat-card class="rating-card" (click)="openViewDialog(rating)">
+          <div class="card-row">
+            <span
+              class="type-chip type-chip--{{ rating.targetType | lowercase }}"
+              [class.type-chip--clickable]="rating.targetType === 'ACCOMMODATION'"
+              [matTooltip]="'View Accommodation'"
+              [matTooltipDisabled]="rating.targetType !== 'ACCOMMODATION'"
+              (click)="rating.targetType === 'ACCOMMODATION' && navigateToAccommodation(rating.targetId, $event)">
+              {{ rating.targetType === 'ACCOMMODATION' ? 'Accommodation' : 'Host' }}
+            </span>
+            <span class="score">{{ rating.score }} ★</span>
+            <span class="rating-date">{{ rating.createdAt | date:'shortDate' }}</span>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

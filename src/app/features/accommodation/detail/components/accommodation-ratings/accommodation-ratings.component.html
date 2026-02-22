@@ -1,0 +1,55 @@
+<div class="ratings-section">
+  <div class="ratings-header">
+    <h3>Ratings</h3>
+    <mat-button-toggle-group
+      [value]="activeTab()"
+      (change)="onTabChange($event.value)"
+      class="tab-toggle">
+      <mat-button-toggle value="ACCOMMODATION">Accommodation</mat-button-toggle>
+      <mat-button-toggle value="HOST">Host</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <div class="summary-row">
+      <span class="average-label">{{ averageLabel() }}</span>
+
+      @if (isGuest()) {
+        @if (myRating()) {
+          <button mat-stroked-button (click)="openViewDialog()">
+            Your rating: {{ myRating()!.score }} ★ — Edit
+          </button>
+        } @else {
+          <button mat-flat-button color="primary" (click)="openCreateDialog()">
+            Rate this {{ activeTab() === 'ACCOMMODATION' ? 'accommodation' : 'host' }}
+          </button>
+        }
+      }
+    </div>
+
+    @if (summary() && summary()!.ratings.length > 0) {
+      <div class="ratings-list">
+        @for (rating of summary()!.ratings; track rating.id) {
+          <div class="rating-item" [class.my-rating]="rating.guestId === currentUserId()">
+            <div class="rating-top">
+              <span class="guest-name">{{ rating.guestFirstName }} {{ rating.guestLastName }}</span>
+              <span class="score">{{ rating.score }} ★</span>
+            </div>
+            <span class="rating-date">{{ rating.createdAt | date:'mediumDate' }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="no-ratings">No ratings yet for this {{ activeTab() === 'ACCOMMODATION' ? 'accommodation' : 'host' }}.</p>
+    }
+  }
+</div>

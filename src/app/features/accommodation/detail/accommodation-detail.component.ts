@@ -27,6 +27,7 @@ import { AvailabilitySectionComponent } from './components/availability-section/
 import { AvailabilityDialogResult } from './components/availability-section/availability-period-dialog.component';
 import { ReservationDialogComponent, ReservationDialogData } from './components/reservation-dialog.component';
 import { ReservationResponse } from '@core/models/reservation.model';
+import { AccommodationRatingsComponent } from './components/accommodation-ratings/accommodation-ratings.component';
 
 @Component({
   selector: 'app-accommodation-detail',
@@ -41,7 +42,8 @@ import { ReservationResponse } from '@core/models/reservation.model';
     MatDividerModule,
     PhotoGalleryComponent,
     AmenitiesListComponent,
-    AvailabilitySectionComponent
+    AvailabilitySectionComponent,
+    AccommodationRatingsComponent
   ],
   templateUrl: './accommodation-detail.component.html',
   styleUrl: './accommodation-detail.component.scss',

@@ -15,8 +15,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         authService.logout();
         void router.navigate(['/auth/login']);
-      } else if (error.status === 403) {
-        void router.navigate(['/']);
       } else if (error.status >= 400) {
         notificationService.showHttpError(error);
       }
