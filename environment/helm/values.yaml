@@ -1,0 +1,41 @@
+fullnameOverride: devoops-frontend
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: cuturic01/devoops-frontend
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  httpPort: 80
+  grpc:
+    enabled: false
+
+ingress:
+  enabled: true
+  className: nginx
+  host: "front.devoops.local"
+  path: /
+  pathType: Prefix
+  annotations: {}
+
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 100m
+  limits:
+    memory: 128Mi
+
+health:
+  path: /health
+  periodSeconds: 10
+  failureThreshold: 3
+  startup:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 12
+
+configData: {}
+secretData: {}
